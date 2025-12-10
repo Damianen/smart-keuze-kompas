@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from 'src/application/auth/services/auth.service';
 import { AbstractAuthRepository } from 'src/core/auth/contract/auth.abstract.repository';
 import { BcryptHashingService } from 'src/infrastructuur/auth/security/service/bcrypt.hashing.service';
 import { AuthRepository } from 'src/infrastructuur/auth/repositories/auth.repository';
@@ -9,7 +8,6 @@ import { JwtTokenService } from 'src/infrastructuur/auth/security/service/jwt.to
 import { AbstractTokenService } from 'src/core/auth/security/contract/abstract.token.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from '../../infrastructuur/auth/guard/auth.guard';
-import { Reflector } from '@nestjs/core';
 
 @Module({
     imports: [DatabaseModule, JwtModule.register({
