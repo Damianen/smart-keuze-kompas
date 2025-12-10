@@ -41,11 +41,9 @@ export class SeqLogger extends AbstractLogger {
     log(message: string, meta?: Record<string, any>): void {
         this.logger.info(message, meta);
     }
-
     warn(message: string, meta?: Record<string, any>): void {
         this.logger.warn(message, meta);
     }
-
     error(message: string, meta?: Record<string, any>): void {
         this.logger.error(message, meta);
     }
