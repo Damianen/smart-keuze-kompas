@@ -1,0 +1,179 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="text-center text-3xl font-extrabold text-gray-900">
+      Smart Keuze Kompas
+    </h2>
+    <p class="mt-2 text-center text-lg text-gray-600">
+      Maak een nieuw account aan
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-xl sm:rounded-lg sm:px-10 border-t-4 border-red-600">
+      <form (ngSubmit)="onSubmit()" class="space-y-5">
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+            <p class="text-sm">{{ errorMessage() }}</p>
+          </div>
+        }
+
+        <!-- Success Message -->
+        @if (successMessage()) {
+          <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+            <p class="text-sm">{{ successMessage() }}</p>
+          </div>
+        }
+
+        <!-- Name -->
+        <div>
+          <label for="name" class="block text-sm font-medium text-gray-700">
+            Naam <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="name"
+              name="name"
+              type="text"
+              required
+              [(ngModel)]="name"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="Jan Jansen"
+            />
+          </div>
+        </div>
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email adres <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              [(ngModel)]="email"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="student@voorbeeld.nl"
+            />
+          </div>
+        </div>
+
+        <!-- Study -->
+        <div>
+          <label for="study" class="block text-sm font-medium text-gray-700">
+            Studie <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <select
+              id="study"
+              name="study"
+              required
+              [(ngModel)]="study"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 bg-white"
+            >
+              <option value="">Selecteer je studie</option>
+              @for (studyOption of studies; track studyOption) {
+                <option [value]="studyOption">{{ studyOption }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Interest -->
+        <div>
+          <label for="interest" class="block text-sm font-medium text-gray-700">
+            Interesse <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <select
+              id="interest"
+              name="interest"
+              required
+              [(ngModel)]="interest"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 bg-white"
+            >
+              <option value="">Selecteer je interesse</option>
+              @for (interestOption of interests; track interestOption) {
+                <option [value]="interestOption">{{ interestOption }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            Wachtwoord <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="new-password"
+              required
+              [(ngModel)]="password"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="Minimaal 8 tekens"
+            />
+          </div>
+          <p class="mt-1 text-xs text-gray-500">Minimaal 8 tekens</p>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label for="confirmPassword" class="block text-sm font-medium text-gray-700">
+            Bevestig wachtwoord <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              autocomplete="new-password"
+              required
+              [(ngModel)]="confirmPassword"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="Herhaal je wachtwoord"
+            />
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button
+            type="submit"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+          >
+            Registreren
+          </button>
+        </div>
+      </form>
+
+      <!-- Login Link -->
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Al een account?</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <a
+            routerLink="/login"
+            class="w-full flex justify-center py-3 px-4 border-2 border-red-600 rounded-lg shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50 transition-colors"
+          >
+            Log in
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,113 @@
+<div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+  <div class="sm:mx-auto sm:w-full sm:max-w-md">
+    <h2 class="text-center text-3xl font-extrabold text-gray-900">
+      Smart Keuze Kompas
+    </h2>
+    <p class="mt-2 text-center text-lg text-gray-600">
+      Log in op je account
+    </p>
+  </div>
+
+  <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+    <div class="bg-white py-8 px-4 shadow-xl sm:rounded-lg sm:px-10 border-t-4 border-red-600">
+      <form (ngSubmit)="onSubmit()" class="space-y-6">
+        <!-- Error Message -->
+        @if (errorMessage()) {
+          <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+            <p class="text-sm">{{ errorMessage() }}</p>
+          </div>
+        }
+
+        <!-- Email -->
+        <div>
+          <label for="email" class="block text-sm font-medium text-gray-700">
+            Email adres
+          </label>
+          <div class="mt-1">
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              [(ngModel)]="email"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="student@voorbeeld.nl"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700">
+            Wachtwoord
+          </label>
+          <div class="mt-1">
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              [(ngModel)]="password"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="••••••••"
+            />
+          </div>
+        </div>
+
+        <!-- Remember & Forgot -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center">
+            <input
+              id="remember-me"
+              name="remember-me"
+              type="checkbox"
+              class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+            />
+            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+              Onthoud mij
+            </label>
+          </div>
+
+          <div class="text-sm">
+            <a href="#" class="font-medium text-red-600 hover:text-red-500">
+              Wachtwoord vergeten?
+            </a>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+          <button
+            type="submit"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+          >
+            Inloggen
+          </button>
+        </div>
+      </form>
+
+      <!-- Register Link -->
+      <div class="mt-6">
+        <div class="relative">
+          <div class="absolute inset-0 flex items-center">
+            <div class="w-full border-t border-gray-300"></div>
+          </div>
+          <div class="relative flex justify-center text-sm">
+            <span class="px-2 bg-white text-gray-500">Nog geen account?</span>
+          </div>
+        </div>
+
+        <div class="mt-6">
+          <a
+            routerLink="/register"
+            class="w-full flex justify-center py-3 px-4 border-2 border-red-600 rounded-lg shadow-sm text-sm font-medium text-red-600 bg-white hover:bg-red-50 transition-colors"
+          >
+            Registreer nu
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
