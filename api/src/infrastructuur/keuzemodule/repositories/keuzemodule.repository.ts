@@ -9,11 +9,11 @@ export class KeuzeModuleRepository extends AbstractKeuzeModuleRepository {
     constructor(@Inject("DATABASE_CONNECTION") private readonly dbConnection: Db){ super();}
 
     async getAll(): Promise<KeuzeModule[]> {
-        const vkmCollection = this.dbConnection.collection<KeuzeModule>("vkm");
-        return await vkmCollection.find().toArray();
+        const keuzemoduleCollection = this.dbConnection.collection<KeuzeModule>("vkm");
+        return await keuzemoduleCollection.find().toArray();
     }
     async getOne(id: string): Promise<KeuzeModule | null> {
-        const vkmCollection = this.dbConnection.collection<KeuzeModule>("vkm");
-        return await vkmCollection.findOne({ _id: new ObjectId(id) });
+        const keuzemoduleCollection = this.dbConnection.collection<KeuzeModule>("vkm");
+        return await keuzemoduleCollection.findOne({ _id: new ObjectId(id) });
     }
 }
