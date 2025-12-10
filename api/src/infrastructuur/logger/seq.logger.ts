@@ -37,7 +37,6 @@ export class SeqLogger extends AbstractLogger {
         });
     }
 
-        
     log(message: string, meta?: Record<string, any>): void {
         this.logger.info(message, meta);
     }

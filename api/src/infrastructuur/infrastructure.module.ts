@@ -5,6 +5,5 @@ import { LoggerModule } from './logger/logger.module';
 
 @Module({
     imports: [AuthModule, KeuzemoduleModule, LoggerModule],
-    exports: [LoggerModule]
 })
 export class InfrastructureModule {}
