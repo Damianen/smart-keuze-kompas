@@ -12,7 +12,6 @@ export class SeqLogger extends AbstractLogger {
 
     constructor() {
         super();
-    
         this.logger = winston.createLogger({
             level: "info",
             format: winston.format.combine(
@@ -30,6 +29,7 @@ export class SeqLogger extends AbstractLogger {
                     serverUrl: this.seqUrl,
                     apiKey: this.apiKey,
                     onError: (e) => {
+                        console.error("Seq Transport Error:", e);
                     },
                     handleExceptions: true,
                     handleRejections: true,
