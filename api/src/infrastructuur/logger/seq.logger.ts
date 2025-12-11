@@ -18,6 +18,7 @@ export class SeqLogger extends AbstractLogger {
             format: winston.format.combine(
                 winston.format.errors({ stack: true }),
                 winston.format.timestamp(),
+                winston.format.metadata({ fillExcept: ["message", "level", "timestamp", "label"] }),
                 winston.format.json(),
             ),
             defaultMeta: { application: "keuze-module-kompas" },
