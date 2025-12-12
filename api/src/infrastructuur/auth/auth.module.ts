@@ -8,6 +8,7 @@ import { JwtTokenService } from 'src/infrastructuur/auth/security/service/jwt.to
 import { AbstractTokenService } from 'src/core/auth/security/contract/abstract.token.service';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from '../../infrastructuur/auth/guard/auth.guard';
+import { LoggerModule } from '../logger/logger.module';
 
 @Module({
     imports: [DatabaseModule, JwtModule.register({
