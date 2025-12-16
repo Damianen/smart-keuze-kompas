@@ -28,7 +28,7 @@
         <!-- Name -->
         <div>
           <label for="name" class="block text-sm font-medium text-gray-700">
-            Naam <span class="text-red-600">*</span>
+            Voornaam <span class="text-red-600">*</span>
           </label>
           <div class="mt-1">
             <input
@@ -38,7 +38,25 @@
               required
               [(ngModel)]="name"
               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
-              placeholder="Jan Jansen"
+              placeholder="Jan"
+            />
+          </div>
+        </div>
+
+        <!-- Surname -->
+        <div>
+          <label for="surname" class="block text-sm font-medium text-gray-700">
+            Achternaam <span class="text-red-600">*</span>
+          </label>
+          <div class="mt-1">
+            <input
+              id="surname"
+              name="surname"
+              type="text"
+              required
+              [(ngModel)]="surname"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-red-500 focus:border-red-500"
+              placeholder="Jansen"
             />
           </div>
         </div>
@@ -62,45 +80,20 @@
           </div>
         </div>
 
-        <!-- Study -->
+        <!-- Birth Date -->
         <div>
-          <label for="study" class="block text-sm font-medium text-gray-700">
-            Studie <span class="text-red-600">*</span>
+          <label for="birthDate" class="block text-sm font-medium text-gray-700">
+            Geboortedatum <span class="text-red-600">*</span>
           </label>
           <div class="mt-1">
-            <select
-              id="study"
-              name="study"
+            <input
+              id="birthDate"
+              name="birthDate"
+              type="date"
               required
-              [(ngModel)]="study"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 bg-white"
-            >
-              <option value="">Selecteer je studie</option>
-              @for (studyOption of studies; track studyOption) {
-                <option [value]="studyOption">{{ studyOption }}</option>
-              }
-            </select>
-          </div>
-        </div>
-
-        <!-- Interest -->
-        <div>
-          <label for="interest" class="block text-sm font-medium text-gray-700">
-            Interesse <span class="text-red-600">*</span>
-          </label>
-          <div class="mt-1">
-            <select
-              id="interest"
-              name="interest"
-              required
-              [(ngModel)]="interest"
-              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 bg-white"
-            >
-              <option value="">Selecteer je interesse</option>
-              @for (interestOption of interests; track interestOption) {
-                <option [value]="interestOption">{{ interestOption }}</option>
-              }
-            </select>
+              [(ngModel)]="birthDate"
+              class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500"
+            />
           </div>
         </div>
 
@@ -147,9 +140,10 @@
         <div class="pt-2">
           <button
             type="submit"
-            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors"
+            [disabled]="isLoading()"
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Registreren
+            {{ isLoading() ? 'Bezig met registreren...' : 'Registreren' }}
           </button>
         </div>
       </form>

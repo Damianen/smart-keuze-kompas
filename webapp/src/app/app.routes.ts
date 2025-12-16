@@ -4,6 +4,7 @@ import { LoginComponent } from './pages/login/login';
 import { RegisterComponent } from './pages/register/register';
 import { ModulesListComponent } from './pages/modules-list/modules-list';
 import { ModuleDetailComponent } from './pages/module-detail/module-detail';
+import { authGuard } from '../guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -12,11 +13,13 @@ export const routes: Routes = [
   },
   {
     path: 'modules',
-    component: ModulesListComponent
+    component: ModulesListComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'modules/:id',
-    component: ModuleDetailComponent
+    component: ModuleDetailComponent,
+    canActivate: [authGuard]
   },
   {
     path: 'login',

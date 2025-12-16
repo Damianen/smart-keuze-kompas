@@ -6,7 +6,7 @@ import { handleError } from './error.service';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'localhost:3000';
+  private apiUrl = 'http://localhost:3000/api/auth';
   private _isAuthenticated: boolean = false;
   constructor(private http: HttpClient) {}
 
@@ -15,7 +15,7 @@ export class UserService {
       .post<{
         success: boolean;
         message: string;
-      }>(this.apiUrl + '/login', login, { withCredentials: true })
+      }>(`${this.apiUrl}/login`, login, { withCredentials: true })
       .pipe(
         tap((response) => {
           this.isAuthenticated(response.success);
@@ -29,7 +29,7 @@ export class UserService {
       .post<{
         success: boolean;
         message: string;
-      }>(this.apiUrl + '/register', register, { withCredentials: true })
+      }>(`${this.apiUrl}/register`, register, { withCredentials: true })
       .pipe(
         map((response) => response),
         catchError((err) => handleError(err)),

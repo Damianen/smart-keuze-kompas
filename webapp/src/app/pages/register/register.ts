@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-register',
@@ -10,43 +11,25 @@ import { FormsModule } from '@angular/forms';
 })
 export class RegisterComponent {
   protected name = signal('');
+  protected surname = signal('');
   protected email = signal('');
+  protected birthDate = signal('');
   protected password = signal('');
   protected confirmPassword = signal('');
-  protected study = signal('');
-  protected interest = signal('');
   protected errorMessage = signal('');
   protected successMessage = signal('');
+  protected isLoading = signal(false);
 
-  protected readonly studies = [
-    'Informatica',
-    'Bedrijfskunde',
-    'Technische Informatica',
-    'Software Engineering',
-    'Data Science',
-    'Cyber Security',
-    'Game Development'
-  ];
-
-  protected readonly interests = [
-    'Development',
-    'Data & Analytics',
-    'Infrastructure & Cloud',
-    'Security',
-    'Design & UX',
-    'Project Management',
-    'Business & Marketing'
-  ];
-
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private userService: UserService
+  ) {}
 
   onSubmit(): void {
-    // Reset messages
     this.errorMessage.set('');
     this.successMessage.set('');
 
-    // Validation
-    if (!this.name() || !this.email() || !this.password() || !this.study() || !this.interest()) {
+    if (!this.name() || !this.surname() || !this.email() || !this.birthDate() || !this.password()) {
       this.errorMessage.set('Vul alle verplichte velden in');
       return;
     }
@@ -61,20 +44,30 @@ export class RegisterComponent {
       return;
     }
 
-    // TODO: Implement actual registration
-    console.log('Registration attempt:', {
+    this.isLoading.set(true);
+
+    this.userService.register({
       name: this.name(),
+      surname: this.surname(),
       email: this.email(),
-      study: this.study(),
-      interest: this.interest(),
-      password: '***'
+      birthDate: new Date(this.birthDate()),
+      password: this.password()
+    }).subscribe({
+      next: (response) => {
+        this.isLoading.set(false);
+        if (response.success) {
+          this.successMessage.set('Account succesvol aangemaakt! Je wordt doorgestuurd...');
+          setTimeout(() => {
+            this.router.navigate(['/login']);
+          }, 2000);
+        } else {
+          this.errorMessage.set(response.message || 'Registratie mislukt');
+        }
+      },
+      error: (error) => {
+        this.isLoading.set(false);
+        this.errorMessage.set(error.errorMessage || 'Er is een fout opgetreden bij de registratie');
+      }
     });
-
-    this.successMessage.set('Account succesvol aangemaakt! Je wordt doorgestuurd...');
-
-    // Navigate to login after 2 seconds
-    setTimeout(() => {
-      this.router.navigate(['/login']);
-    }, 2000);
   }
 }
