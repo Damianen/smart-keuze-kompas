@@ -9,8 +9,7 @@ import { AuthGuard } from './infrastructuur/auth/guard/auth.guard';
 
 @Module({
 	imports: [
-		InfrastructureModule, 
-		PresentationModule,
+
 		ConfigModule.forRoot({
 			isGlobal: true,
 			cache: true,
@@ -26,7 +25,10 @@ import { AuthGuard } from './infrastructuur/auth/guard/auth.guard';
 				}
 			]
 		}),
+		InfrastructureModule, 
+		PresentationModule,
 	],
+
 	providers: [
 		{
 			provide: APP_GUARD,
