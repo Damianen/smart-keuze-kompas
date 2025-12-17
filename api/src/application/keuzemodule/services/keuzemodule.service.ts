@@ -2,6 +2,7 @@ import { BadRequestException, Injectable, InternalServerErrorException, NotFound
 import { KeuzeModule } from "src/core/keuzemodule/entities/keuzemodule.entitie";
 import { AbstractKeuzeModuleRepository } from "src/core/keuzemodule/contract/abstract.keuzemodule.repository";
 import { AbstractLogger } from "src/core/logger/abstract.logger";
+import { escapeRegExp, normalizeString } from "src/utils/utils";
 
 @Injectable()
 export class KeuzeModuleService {
@@ -36,7 +37,28 @@ export class KeuzeModuleService {
             if (error instanceof NotFoundException) {
                 throw error;
             }
-            throw new InternalServerErrorException("Er is een fout opgetreden");
+            throw new InternalServerErrorException("Er is een fout opgetreden??");
         }
     }
+    async getByAttribute(name: string, location?: string, level?: string): Promise<KeuzeModule[]> {
+        if (!name) {
+            throw new BadRequestException("Ongeldig attribuut");
+        }
+        try{
+            let escapedName = escapeRegExp(name);
+            let escapedLocation = location ? escapeRegExp(location) : undefined;
+            let escapedLevel = level ? escapeRegExp(level) : undefined;
+            escapedName = normalizeString(escapedName);
+            
+            const keuzeModules = await this.keuzeModuleRepository.getByAttribute(escapedName, escapedLocation, escapedLevel);
+            if (!keuzeModules) {
+                throw new NotFoundException("Geen keuze modules gevonden met het opgegeven attribuut");
+            }
+            return keuzeModules;
+        } catch (error) {
+            if (error instanceof NotFoundException) {
+                throw error;
+            }
+    }       throw new InternalServerErrorException("Er is een fout opgetreden??");
+        }
 }
