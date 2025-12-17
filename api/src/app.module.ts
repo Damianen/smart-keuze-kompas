@@ -5,11 +5,9 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { ConfigService, ConfigModule } from '@nestjs/config';
 import { seconds } from '@nestjs/throttler';
-import { AuthGuard } from './infrastructuur/auth/guard/auth.guard';
 
 @Module({
 	imports: [
-
 		ConfigModule.forRoot({
 			isGlobal: true,
 			cache: true,
