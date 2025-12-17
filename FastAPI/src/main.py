@@ -1,6 +1,13 @@
 from fastapi import FastAPI
-from app import predict
+from pydantic import BaseModel
+from src.ai_model import recommend
 
+app = FastAPI()
 
-app = FastAPI(title="My FastAPI App", description="A simple FastAPI application.")
-app.include_router(predict.router, prefix="/api/v1")
+class Request(BaseModel):
+    student_text: str
+    limit: int = 5
+
+@app.post("/recommend")
+def get_recommendations(req: Request):
+    return {"recommendations": recommend(req.student_text, req.limit)}
