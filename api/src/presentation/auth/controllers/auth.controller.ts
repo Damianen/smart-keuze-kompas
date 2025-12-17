@@ -8,11 +8,13 @@ import { AuthGuard } from "../../../infrastructuur/auth/guard/auth.guard";
 import { HttpCode } from "@nestjs/common";
 import { HttpStatus } from "@nestjs/common";
 import { CurrentUser } from "../../../infrastructuur/auth/decoder/current-user.decoder";
+import { Throttle, seconds } from "@nestjs/throttler";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
+    @Throttle({default: {ttl: seconds(60), limit: 5}})
     @AllowAnonymous()
     @HttpCode(HttpStatus.CREATED)
     @Post('register')
@@ -20,6 +22,7 @@ export class AuthController {
         await this.authService.register(createStudentDto);
         return { success: true, message: 'Registreren gelukt' };
     }
+    @Throttle({default: {ttl: seconds(60), limit: 5}})
     @AllowAnonymous()
     @HttpCode(HttpStatus.OK)
     @Post('login')
@@ -28,6 +31,7 @@ export class AuthController {
         res.cookie('token', result, { httpOnly: true, sameSite: 'none', secure: true, maxAge: 3600000 });  // met rekenmachine berekend (24 * 60 * 60 * 1000) = 3600000 ms = 1 uur
         return { success: true, message: 'Inloggen gelukt' };
     }
+    @Throttle({default: {ttl: seconds(60), limit: 5}})
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     @Post('logout')
@@ -35,7 +39,6 @@ export class AuthController {
         res.clearCookie('token', { httpOnly: true, sameSite: 'none', secure: true, path: '/' });
         return { success: true, message: 'Uitloggen gelukt' };
     }
-
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     @Get('user')

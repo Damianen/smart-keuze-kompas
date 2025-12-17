@@ -15,7 +15,7 @@ import { LoggerModule } from '../logger/logger.module';
         secret: process.env.JWT_SECRET,
         signOptions: { expiresIn: '1h' },
     })],
-    providers: [AuthGuard,
+    providers: [
         {
             provide: AbstractAuthRepository,
             useClass: AuthRepository,
@@ -29,6 +29,6 @@ import { LoggerModule } from '../logger/logger.module';
             useClass: JwtTokenService,
         },
     ],
-    exports: [AbstractAuthRepository, AbstractHashingService, AbstractTokenService, AuthGuard],
+    exports: [AbstractAuthRepository, AbstractHashingService, AbstractTokenService],
 })
 export class AuthModule {}
