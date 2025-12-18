@@ -1,4 +1,4 @@
-export class KeuzemoduleAIEntity {
+export class KeuzemoduleAIDto {
     constructor(
     public readonly id: number,
     public readonly name: string,
