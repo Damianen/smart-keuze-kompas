@@ -2,7 +2,6 @@ import { HttpService } from '@nestjs/axios/';
 import { catchError, firstValueFrom, map } from 'rxjs';
 import { Injectable } from '@nestjs/common';
 import { KeuzemoduleAIEntity } from 'src/core/recommender-system/entity/keuzemodule.ai.entity';
-import { level } from 'winston';
 
 @Injectable()
 export class FastApiClient {
@@ -28,7 +27,6 @@ export class FastApiClient {
     }catch (error) {
             console.error('Error bij ophalen aanbevelingen:', error);
             throw error;
-
         }
     }
 }
