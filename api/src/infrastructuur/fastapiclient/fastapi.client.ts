@@ -20,10 +20,6 @@ export class FastApiClient {
                 this.httpService.post<KeuzemoduleAIEntity[]>('https://fab0ee7a-03fd-41c0-b58f-8e29c39424fa.mock.pstmn.io/api/recommender-system/recommendations', params, { headers: heaaderRequest }).pipe(
                     catchError((error) => {
                             console.error('Error ontstaan bij het ophalen van aanbevelingen:');
-                            console.error('status:', error?.response?.status);
-                            console.error('data:', error?.response?.data);
-                            console.error('url:', error?.config?.url);
-                            console.error('method:', error?.config?.method);
                         throw error;
                     })
                 )
