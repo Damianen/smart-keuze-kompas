@@ -14,7 +14,7 @@ export class FastApiClient {
             const heaaderRequest = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'TOKEN': `${this.configService.get('API_KEY')}`
+                'x-api-key': `${this.configService.get('API_KEY')}`
             };
             const {data} = await firstValueFrom(
                 this.httpService.post<KeuzemoduleAIEntity[]>(`${this.configService.get('FAST_API_URL')}`, params, { headers: heaaderRequest }).pipe(
