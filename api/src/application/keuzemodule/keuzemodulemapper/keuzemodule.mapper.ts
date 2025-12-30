@@ -1,5 +1,7 @@
+import { KeuzemoduleAIDto } from "src/application/recommender-system/dto/keuzemodule.ai.dto";
 import {KeuzeModule} from "../../../core/keuzemodule/entities/keuzemodule.entitie";
 import {KeuzeModuleDto } from "../dto/keuzemodule.dto";
+import { KeuzemoduleAIEntity } from "src/core/recommender-system/entity/keuzemodule.ai.entity";
 
 export class KeuzeModuleMapper {
     static toDTO(entity: KeuzeModule): KeuzeModuleDto  {

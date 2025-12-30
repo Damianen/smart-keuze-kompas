@@ -1,5 +1,4 @@
 import { AbstractRecommenderSystemRepository } from "src/core/recommender-system/contract/abstract.recommender.system.repository";
-import { KeuzemoduleAIEntity } from "src/core/recommender-system/entity/keuzemodule.ai.entity";
 import { RecommendationInputDto } from "../dto/recommentation.input.ai.dto";
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { KeuzemoduleAIDto } from "../dto/keuzemodule.ai.dto";

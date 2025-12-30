@@ -12,4 +12,5 @@ export class RecommenderSystemRepository implements AbstractRecommenderSystemRep
         const results = await this.fastApiClient.getRecommendations({ params: { studentInput } });
         return results;
     }
+
 }
