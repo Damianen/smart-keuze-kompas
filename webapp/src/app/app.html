@@ -27,19 +27,31 @@
           >
             Modules
           </a>
-          <a
-            routerLink="/login"
-            routerLinkActive="text-red-600 font-semibold"
-            class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-          >
-            Inloggen
-          </a>
-          <a
-            routerLink="/register"
-            class="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
-          >
-            Registreren
-          </a>
+          @if (!userService.isLoggedIn()) {
+            <a
+              routerLink="/login"
+              routerLinkActive="text-red-600 font-semibold"
+              class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Inloggen
+            </a>
+            <a
+              routerLink="/register"
+              class="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Registreren
+            </a>
+          } @else {
+            <span class="text-gray-700 px-3 py-2 text-sm font-medium">
+              Hi, {{ userService.getUserName() }}
+            </span>
+            <button
+              (click)="logout()"
+              class="bg-red-600 text-white hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Uitloggen
+            </button>
+          }
         </div>
 
         <!-- Mobile menu button -->
@@ -81,21 +93,33 @@
             >
               Modules
             </a>
-            <a
-              routerLink="/login"
-              routerLinkActive="bg-red-50 text-red-600 font-semibold"
-              (click)="toggleMobileMenu()"
-              class="text-gray-700 hover:bg-gray-50 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
-            >
-              Inloggen
-            </a>
-            <a
-              routerLink="/register"
-              (click)="toggleMobileMenu()"
-              class="bg-red-600 text-white hover:bg-red-700 px-3 py-2 rounded-lg text-sm font-medium text-center transition-colors"
-            >
-              Registreren
-            </a>
+            @if (!userService.isLoggedIn()) {
+              <a
+                routerLink="/login"
+                routerLinkActive="bg-red-50 text-red-600 font-semibold"
+                (click)="toggleMobileMenu()"
+                class="text-gray-700 hover:bg-gray-50 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Inloggen
+              </a>
+              <a
+                routerLink="/register"
+                (click)="toggleMobileMenu()"
+                class="bg-red-600 text-white hover:bg-red-700 px-3 py-2 rounded-lg text-sm font-medium text-center transition-colors"
+              >
+                Registreren
+              </a>
+            } @else {
+              <div class="text-gray-700 px-3 py-2 text-sm font-medium border-b border-gray-200">
+                Hi, {{ userService.getUserName() }}
+              </div>
+              <button
+                (click)="logout(); toggleMobileMenu()"
+                class="bg-red-600 text-white hover:bg-red-700 px-3 py-2 rounded-lg text-sm font-medium text-center transition-colors"
+              >
+                Uitloggen
+              </button>
+            }
           </div>
         </div>
       }

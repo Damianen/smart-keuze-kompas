@@ -1,12 +1,12 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { KeuzeModule } from '../../../dtos/module.dto';
 import { KeuzemoduleService } from '../../../services/keuzemodule.service';
 
 @Component({
   selector: 'app-modules-list',
-  imports: [RouterLink, FormsModule],
+  imports: [FormsModule],
   templateUrl: './modules-list.html',
   styleUrl: './modules-list.css'
 })

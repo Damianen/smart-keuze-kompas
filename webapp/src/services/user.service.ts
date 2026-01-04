@@ -8,6 +8,7 @@ import { handleError } from './error.service';
 export class UserService {
   private apiUrl = 'http://localhost:3000/api/auth';
   private _isAuthenticated: boolean = false;
+  private _userName: string = '';
   constructor(private http: HttpClient) {}
 
   login(login: LoginDto): Observable<{ success: boolean; message: string }> {
@@ -51,10 +52,13 @@ export class UserService {
   }
   checkAuth(): Observable<boolean> {
     return this.http
-      .get<{ success: boolean }>(`${this.apiUrl}/user`, { withCredentials: true })
+      .get<{ success: boolean; user: { sub: string; email: string; id: string } }>(`${this.apiUrl}/user`, { withCredentials: true })
       .pipe(
         map((res) => {
           this.isAuthenticated(res.success);
+          if (res.success && res.user) {
+            this._userName = res.user.sub;
+          }
           return this._isAuthenticated;
         }),
         catchError(() => scheduled([false], asyncScheduler)),
@@ -62,8 +66,14 @@ export class UserService {
   }
   private isAuthenticated(value: boolean) {
     this._isAuthenticated = value;
+    if (!value) {
+      this._userName = '';
+    }
   }
   public isLoggedIn(): boolean {
     return this._isAuthenticated;
+  }
+  public getUserName(): string {
+    return this._userName;
   }
 }
