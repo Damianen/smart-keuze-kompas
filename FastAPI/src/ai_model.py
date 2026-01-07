@@ -1,0 +1,118 @@
+import os
+import re
+import joblib
+import numpy as np
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+
+
+# Pad-locaties
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+MODELS_DIR = os.path.join(BASE_DIR, "models")
+DATA_CSV = os.path.join(BASE_DIR, "modeltraining.py", "cleaned_modules.csv")
+
+
+_tfidf = None
+_tfidf_matrix = None
+_modules_df = None
+
+
+def _load_artifacts():
+	"""Laad TF-IDF vectorizer, matrix en dataset."""
+	global _tfidf, _tfidf_matrix, _modules_df
+	if _tfidf is None:
+		_tfidf = joblib.load(os.path.join(MODELS_DIR, "tfidf_vectorizer.pkl"))
+	if _tfidf_matrix is None:
+		_tfidf_matrix = joblib.load(os.path.join(MODELS_DIR, "tfidf_matrix.pkl"))
+	if _modules_df is None:
+		_modules_df = pd.read_csv(DATA_CSV)
+
+
+def _basic_clean(text: str) -> str:
+	"""Simpel schoonmaken: lower, verwijder digits/punctuatie/extra spaties."""
+	t = (text or "").lower()
+	t = re.sub(r"\d+", " ", t)
+	t = re.sub(r"[^\w\s]", " ", t)
+	t = re.sub(r"\s+", " ", t).strip()
+	return t
+
+
+def _normalize(arr: np.ndarray) -> np.ndarray:
+	if arr.size == 0:
+		return arr
+	min_v = np.min(arr)
+	max_v = np.max(arr)
+	if max_v - min_v == 0:
+		return np.zeros_like(arr)
+	return (arr - min_v) / (max_v - min_v)
+
+
+def recommend(student_text: str, limit: int = 5):
+	
+
+	# 4.1 Student Profile
+	_load_artifacts()
+	cleaned = _basic_clean(student_text)
+	student_vec = _tfidf.transform([cleaned])
+
+	# 4.2 NLP verwerken 
+	print(f"Studentprofiel vector shape: {student_vec.shape}")
+	print(f"TF-IDF matrix shape: {_tfidf_matrix.shape}")
+
+	# 4.3 Similarity scores
+	sim = cosine_similarity(student_vec, _tfidf_matrix)[0]
+	print(f"\nSimilarity scores berekend voor {len(sim)} modules")
+	print(f"Hoogste score: {sim.max():.4f}")
+	print(f"Gemiddelde score: {sim.mean():.4f}")
+
+	# Populariteit 
+	if "popularity_score" in _modules_df.columns:
+		pop = _modules_df["popularity_score"].fillna(0).astype(float).values
+	else:
+		pop = np.zeros(len(sim))
+	pop_norm = _normalize(pop)
+
+	# 4.4 Hybrid score 
+	w_content = 0.8
+	w_popularity = 0.2
+	hybrid = w_content * sim + w_popularity * pop_norm
+
+	k = max(1, int(limit))
+	top_idx = np.argsort(hybrid)[-k:][::-1]
+
+	feature_names = _tfidf.get_feature_names_out()
+	student_dense = student_vec.toarray()[0]
+
+	results = []
+	for idx in top_idx:
+		row = _modules_df.iloc[idx]
+		module_vec = _tfidf_matrix[idx].toarray()[0]
+		overlap = student_dense * module_vec
+
+		
+		nz = np.nonzero(overlap)[0]
+		if nz.size > 0:
+			ranked = nz[np.argsort(np.abs(overlap[nz]))[::-1]]
+			top_terms = [feature_names[i] for i in ranked]
+		else:
+			top_terms = []
+
+		if top_terms:
+			reason_text = "Reden: je bent geinteresseerd in: " + ", ".join(top_terms)
+		else:
+			reason_text = "Reden: op basis van inhoudelijke overlap tussen profiel en module."
+
+		results.append({
+			"id": int(row.get("id", idx)),
+			"name": row.get("name", "Unknown"),
+			"level": row.get("level"),
+			"location": row.get("location"),
+			"estimated_difficulty": int(row.get("estimated_difficulty", 0)) if pd.notna(row.get("estimated_difficulty")) else None,
+			"content_score": float(round(sim[idx], 4)),
+			"popularity_score": float(round(pop_norm[idx], 4)),
+			"hybrid_score": float(round(hybrid[idx], 4)),
+			"reason_text": reason_text,
+		})
+
+	return results
+
