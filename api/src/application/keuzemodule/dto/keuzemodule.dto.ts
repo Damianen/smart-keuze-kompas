@@ -6,8 +6,6 @@ export class KeuzeModuleDto {
     @IsNotEmpty()
     id: number;
     @IsNotEmpty()
-    _id: ObjectId;
-    @IsNotEmpty()
     name: string;
     @IsNotEmpty()
     description: string;

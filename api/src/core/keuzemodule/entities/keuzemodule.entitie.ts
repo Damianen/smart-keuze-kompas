@@ -1,6 +1,6 @@
 export interface KeuzeModule {
     id: number;
-    _id: string;
+    objectId: string;
     name: string;
     description: string;
     shortdescription: string;

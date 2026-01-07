@@ -5,7 +5,6 @@ export class KeuzeModuleMapper {
     static toDTO(entity: KeuzeModule): KeuzeModuleDto  {
         return {
             id: entity.id,
-            _id: new ObjectId(entity._id),
             name: entity.name,
             description: entity.description,
             studycredit: entity.studycredit,
@@ -13,7 +12,6 @@ export class KeuzeModuleMapper {
             shortdescription: entity.shortdescription,
             level: entity.level,
             content: entity.content,
-
             learningoutcomes: entity.learningoutcomes,
         };
     }
