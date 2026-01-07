@@ -1,8 +1,12 @@
-import {IsNotEmpty} from "class-validator";
+import {isNotEmpty, IsNotEmpty} from "class-validator";
+import { ObjectId } from "mongodb";
+
     
 export class KeuzeModuleDto {
     @IsNotEmpty()
     id: number;
+    @IsNotEmpty()
+    _id: ObjectId;
     @IsNotEmpty()
     name: string;
     @IsNotEmpty()

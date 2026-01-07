@@ -15,7 +15,7 @@ export class KeuzeModuleRepository extends AbstractKeuzeModuleRepository {
     }
     async getOne(id: string): Promise<KeuzeModule | null> {
         const keuzemoduleCollection = this.dbConnection.collection<KeuzeModule>("vkm");
-        return await keuzemoduleCollection.findOne({ _id: new ObjectId(id) });
+        return await keuzemoduleCollection.findOne({ _id: id });
     }
     async getByAttribute(name: string, location?: string, level?: string): Promise<KeuzeModule[]> {
 

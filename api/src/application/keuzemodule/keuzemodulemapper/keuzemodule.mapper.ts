@@ -1,12 +1,11 @@
-import { KeuzemoduleAIDto } from "src/application/recommender-system/dto/keuzemodule.ai.dto";
+import { ObjectId } from "mongodb";
 import {KeuzeModule} from "../../../core/keuzemodule/entities/keuzemodule.entitie";
 import {KeuzeModuleDto } from "../dto/keuzemodule.dto";
-import { KeuzemoduleAIEntity } from "src/core/recommender-system/entity/keuzemodule.ai.entity";
-
 export class KeuzeModuleMapper {
     static toDTO(entity: KeuzeModule): KeuzeModuleDto  {
         return {
             id: entity.id,
+            _id: new ObjectId(entity._id),
             name: entity.name,
             description: entity.description,
             studycredit: entity.studycredit,
@@ -14,6 +13,7 @@ export class KeuzeModuleMapper {
             shortdescription: entity.shortdescription,
             level: entity.level,
             content: entity.content,
+
             learningoutcomes: entity.learningoutcomes,
         };
     }
