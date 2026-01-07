@@ -11,7 +11,7 @@ export class KeuzemoduleService {
 
   getAllKeuzeModules(): Observable<KeuzeModule[]> {
     return this.http
-      .get<KeuzeModule[]>(this.apiUrl, { withCredentials: true })
+      .get<KeuzeModule[]>(`${this.apiUrl}/getAll`, { withCredentials: true })
       .pipe(
         map((response) => response),
         catchError((err) => handleError(err)),
@@ -20,7 +20,23 @@ export class KeuzemoduleService {
 
   getKeuzeModuleById(id: number): Observable<KeuzeModule | null> {
     return this.http
-      .get<KeuzeModule | null>(`${this.apiUrl}/${id}`, { withCredentials: true })
+      .get<KeuzeModule | null>(`${this.apiUrl}/getOne/${id}`, { withCredentials: true })
+      .pipe(
+        map((response) => response),
+        catchError((err) => handleError(err)),
+      );
+  }
+
+  searchKeuzeModules(name: string, location?: string, level?: string): Observable<KeuzeModule[]> {
+    let params: any = { name };
+    if (location) params.location = location;
+    if (level) params.level = level;
+
+    return this.http
+      .get<KeuzeModule[]>(`${this.apiUrl}/search`, {
+        params,
+        withCredentials: true
+      })
       .pipe(
         map((response) => response),
         catchError((err) => handleError(err)),
