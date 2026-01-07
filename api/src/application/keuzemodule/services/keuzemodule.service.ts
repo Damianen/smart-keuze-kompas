@@ -3,18 +3,20 @@ import { KeuzeModule } from "src/core/keuzemodule/entities/keuzemodule.entitie";
 import { AbstractKeuzeModuleRepository } from "src/core/keuzemodule/contract/abstract.keuzemodule.repository";
 import { AbstractLogger } from "src/core/logger/abstract.logger";
 import { escapeRegExp, normalizeString } from "src/utils/utils";
-
+import { KeuzeModuleDto } from "../dto/keuzemodule.dto";
+import { KeuzeModuleMapper } from "../keuzemodulemapper/keuzemodule.mapper";
 @Injectable()
 export class KeuzeModuleService {
     constructor(private readonly keuzeModuleRepository: AbstractKeuzeModuleRepository, private readonly logger: AbstractLogger) {}
 
-    async getAll(): Promise<KeuzeModule[]> {
+    async getAll(): Promise<KeuzeModuleDto[]> {
         try{
            const keuzeModules = await this.keuzeModuleRepository.getAll();
            if(!keuzeModules){
-            throw new NotFoundException("Geen Keuze modules gevonden");
+                throw new NotFoundException("Geen Keuze modules gevonden");
            }
-           return keuzeModules;
+           const keuzeModuleDto = KeuzeModuleMapper.toDTOArray(keuzeModules);
+           return keuzeModuleDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
@@ -22,7 +24,7 @@ export class KeuzeModuleService {
             throw new InternalServerErrorException("Er is een fout opgetreden");
         }
     }
-    async getOne(id: string): Promise<KeuzeModule | null> {
+    async getOne(id: string): Promise<KeuzeModuleDto | null> {
         if (!id) {
             throw new BadRequestException("Ongeldig ID");
         }
@@ -31,8 +33,9 @@ export class KeuzeModuleService {
             if (!keuzeModule) {
                 throw new NotFoundException("Keuze module niet gevonden");
             }
+            const keuzeModuleDto = KeuzeModuleMapper.toDTO(keuzeModule);
             this.logger.log(`Keuze module opgehaald: ${keuzeModule.id}`, {id: keuzeModule.id, name: keuzeModule.name, code: keuzeModule.description, credits: keuzeModule.studycredit, location: keuzeModule.location, shortdescription: keuzeModule.shortdescription});
-            return keuzeModule;
+            return keuzeModuleDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
@@ -40,7 +43,7 @@ export class KeuzeModuleService {
             throw new InternalServerErrorException("Er is een fout opgetreden??");
         }
     }
-    async getByAttribute(name: string, location?: string, level?: string): Promise<KeuzeModule[]> {
+    async getByAttribute(name: string, location?: string, level?: string): Promise<KeuzeModuleDto[]> {
         if (!name) {
             throw new BadRequestException("Ongeldig attribuut");
         }
@@ -54,7 +57,8 @@ export class KeuzeModuleService {
             if (!keuzeModules) {
                 throw new NotFoundException("Geen keuze modules gevonden met het opgegeven attribuut");
             }
-            return keuzeModules;
+            const keuzeModulesDto = KeuzeModuleMapper.toDTOArray(keuzeModules);
+            return keuzeModulesDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
                 throw error;
