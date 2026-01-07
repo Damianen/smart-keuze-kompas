@@ -3,6 +3,7 @@ import { AbstractKeuzeModuleRepository } from "../../../core/keuzemodule/contrac
 import { KeuzeModule } from "../../../core/keuzemodule/entities/keuzemodule.entitie";
 import { Db, ObjectId } from "mongodb";
 
+
 @Injectable()
 export class KeuzeModuleRepository extends AbstractKeuzeModuleRepository {
 
@@ -14,6 +15,20 @@ export class KeuzeModuleRepository extends AbstractKeuzeModuleRepository {
     }
     async getOne(id: string): Promise<KeuzeModule | null> {
         const keuzemoduleCollection = this.dbConnection.collection<KeuzeModule>("vkm");
-        return await keuzemoduleCollection.findOne({ _id: new ObjectId(id) });
+        return await keuzemoduleCollection.findOne({ id: Number(id) });
     }
+    async getByAttribute(name: string, location?: string, level?: string): Promise<KeuzeModule[]> {
+
+        const filter: any = {}
+        filter.$or = [{name: {$regex: name, $options: 'i'}}];
+        if(location){
+            filter.location = location;
+        }
+        if(level){
+            filter.level = level;
+        }
+        const keuzemoduleCollection = this.dbConnection.collection<KeuzeModule>("vkm").find({ ...filter }).toArray();
+        return await keuzemoduleCollection;
+    }
+
 }

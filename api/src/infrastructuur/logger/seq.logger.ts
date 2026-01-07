@@ -2,16 +2,18 @@ import { Injectable } from "@nestjs/common";
 import { AbstractLogger } from "src/core/logger/abstract.logger";
 import winston from "winston";
 import { SeqTransport } from "@datalust/winston-seq";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class SeqLogger extends AbstractLogger {
-    private readonly seqUrl = process.env.SEQ_BASE_URL || "http://localhost:5341";
-    private readonly apiKey = process.env.SEQ_API_KEY || "";
 
     public logger: winston.Logger;
 
-    constructor() {
+    constructor(config: ConfigService) {
         super();
+        
+        const seqUrl = config.get<string>('SEQ_BASE_URL', 'http://localhost:5341');
+        const apiKey = config.get<string>('SEQ_API_KEY', '');
         this.logger = winston.createLogger({
             level: "info",
             format: winston.format.combine(
@@ -26,8 +28,8 @@ export class SeqLogger extends AbstractLogger {
                 format: winston.format.simple(),
                 }),
                 new SeqTransport({
-                    serverUrl: this.seqUrl,
-                    apiKey: this.apiKey,
+                    serverUrl: seqUrl,
+                    apiKey: apiKey,
                     onError: (e) => {
                         console.error("Seq Transport Error:", e);
                     },
