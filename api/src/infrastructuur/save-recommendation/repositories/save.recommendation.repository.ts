@@ -2,6 +2,7 @@ import { AbstractSaveRecommendation } from "../../../core/save-recommendations/c
 import { KeuzemoduleAIEntity } from "../../../core/recommender-system/entity/keuzemodule.ai.entity";
 import { Injectable, Inject } from "@nestjs/common";
 import { Db, ObjectId } from "mongodb";
+import { SavedRecommendationsEntity } from "src/core/save-recommendations/entity/saved.recommendations.entity";
 @Injectable()
 export class SaveRecommendationRepository extends AbstractSaveRecommendation {
 
@@ -18,5 +19,15 @@ export class SaveRecommendationRepository extends AbstractSaveRecommendation {
             { $set: collection }
         );
         return {message: "Aanbevelingen zijn succesvol opgeslagen", status: result.modifiedCount > 0};
+    }
+    async getRecommendations(studentId: string): Promise<SavedRecommendationsEntity | null> {
+        const studentCollection = this.dbConnection.collection<SavedRecommendationsEntity>("student");
+        const student = await studentCollection.findOne({ _id: new ObjectId(studentId) });
+
+        const collection: any = {
+            recommendations: student?.recommendations || [],
+            savedAt: student?.savedAt
+        }
+        return student ? collection : null;
     }
 }
