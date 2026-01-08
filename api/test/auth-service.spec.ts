@@ -9,7 +9,6 @@ import { Student } from '../src/core/auth/entities/student.entitie';
 import { AuthService } from '../src/application/auth/services/auth.service';
 
 type createStudentDto = CreateStudentDto;
-type student = Student;
 
 describe('AuthService', () => {
     let service: AuthService;
@@ -80,8 +79,8 @@ describe('AuthService', () => {
 
             await expect(service.register(dto)).rejects.toBeInstanceOf(InternalServerErrorException);
             });
-
-            it('registreert student succesvol', async () => {
+        });
+        it('registreert student succesvol', async () => {
             const dto: createStudentDto = {
                 email: 'test@example.com',
                 name: 'Test',
@@ -107,7 +106,6 @@ describe('AuthService', () => {
                 surname: dto.surname,
                 name: dto.name,
             });
-        });
     });
     describe('login', () => {
         it('gooit NotFoundException als student niet bestaat', async () => {
