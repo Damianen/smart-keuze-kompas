@@ -15,19 +15,19 @@ export class FastApiClient {
     constructor(private readonly httpService: HttpService, private readonly configService: ConfigService) {}
 
 
-    async getRecommendations(params: any): Promise<KeuzemoduleAIEntity[]> {
+    async getRecommendations(student_text: string): Promise<KeuzemoduleAIEntity[]> {
         try {
 
             const url = this.configService.get('FAST_API_URL');
             const apiKey = this.configService.get('API_KEY');
-
+            const apiKeyName = this.configService.get('API_KEY_NAME');
             const headerRequest = {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-                'x-api-key': `${apiKey}`,
+                [`${apiKeyName}`]: `${apiKey}`,
             };
             const {data} = await firstValueFrom(
-                this.httpService.post<KeuzemoduleAIResponse>(`${url}`, params, { headers: headerRequest }).pipe(
+                this.httpService.post<KeuzemoduleAIResponse>(url, {student_text: student_text }, { headers: headerRequest }).pipe(
                     catchError((error) => {
                             console.error('Error ontstaan bij het ophalen van aanbevelingen:', {
                                 url: error.config?.url,
@@ -41,7 +41,7 @@ export class FastApiClient {
             return data.recommendations ?? [];
     }catch (error) {
             console.error('Error bij ophalen aanbevelingen:', error);
-            throw new BadGatewayException('Fout bij communiceren met de aanbevelingsservice.');
+            throw new BadGatewayException('Fout bij communiceren met de aanbevelingsservice. ');
         }
     }
 }

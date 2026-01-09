@@ -1,7 +1,6 @@
 import {isNotEmpty, IsNotEmpty} from "class-validator";
-import { ObjectId } from "mongodb";
+import { sanitizeInput } from "src/utils/utils";
 
-    
 export class KeuzeModuleDto {
     @IsNotEmpty()
     id: number;
