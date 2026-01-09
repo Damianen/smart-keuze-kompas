@@ -93,14 +93,18 @@ def recommend(student_text: str, limit: int = 5):
 		nz = np.nonzero(overlap)[0]
 		if nz.size > 0:
 			ranked = nz[np.argsort(np.abs(overlap[nz]))[::-1]]
-			top_terms = [feature_names[i] for i in ranked]
+			top_terms = [feature_names[i] for i in ranked[:5]]
 		else:
 			top_terms = []
 
-		if top_terms:
-			reason_text = "Reden: je bent geinteresseerd in: " + ", ".join(top_terms)
+		
+		if top_terms and len(top_terms) >= 2:
+			shared_interests = ", ".join(top_terms[:3])
+			reason_text = f"Perfect match! Je interesses ({shared_interests}) passen goed bij deze module. Dit zijn precies de thema's die hier bij passen."
+		elif top_terms:
+			reason_text = f"Deze module focust op {top_terms[0]} — iets wat je interesse heeft."
 		else:
-			reason_text = "Reden: op basis van inhoudelijke overlap tussen profiel en module."
+			reason_text = "Deze module sluit goed aan op jouw profiel en interesses."
 
 		results.append({
 			"id": int(row.get("id", idx)),
