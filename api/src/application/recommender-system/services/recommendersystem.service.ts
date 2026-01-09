@@ -11,11 +11,11 @@ export class RecommenderSystemService {
         private readonly recommenderSystemRepository: AbstractRecommenderSystemRepository
     ) {}
     async getRecommendations(dto: RecommendationInputDto): Promise<KeuzemoduleAIDto[]> {
-        if (!dto.studentInput){
+        if (!dto.student_text){
             throw new BadRequestException('De input voor aanbevelingen mag niet leeg zijn.');
         }
         try {
-            const recommendations = await this.recommenderSystemRepository.getRecommendations(dto.studentInput);
+            const recommendations = await this.recommenderSystemRepository.getRecommendations(dto.student_text);
             if (!recommendations || recommendations.length === 0) {
                 throw new NotFoundException('Geen aanbevelingen gevonden voor de gegeven input.');
             }
