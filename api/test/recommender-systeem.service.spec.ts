@@ -25,7 +25,7 @@ describe('RecommenderSystemService', () => {
 
     describe('getRecommendations', () => {
         it('Ik zou een lijst aan aanbevelingen moeten krijgen', async () => {
-            const dto: RecommendationInputDto = { studentInput: 'Ik hou van wiskunde en programmeren' };
+            const dto: RecommendationInputDto = { student_text: 'Ik hou van wiskunde en programmeren' };
             const recommendations: KeuzemoduleAIDto[] = [
                 { id: 1, name: 'Inleiding tot Programmeren', location: 'Leer de basis van programmeren.', estimated_difficulty: 3, content_score: 8, popularity_score: 9, hybrid_score: 8.5, reason_text: 'Deze module past goed bij je interesse in programmeren.', level: 'Beginner' },
                 { id: 2, name: 'Geavanceerde Wiskunde', location: 'Campus B', estimated_difficulty: 4, content_score: 9, popularity_score: 7, hybrid_score: 8.0, reason_text: 'Deze module sluit aan bij je liefde voor wiskunde.', level: 'Gevorderd' },
@@ -35,19 +35,19 @@ describe('RecommenderSystemService', () => {
             const result = await service.getRecommendations(dto);
 
             expect(result).toEqual(recommendations);
-            expect(repoMock.getRecommendations).toHaveBeenCalledWith(dto.studentInput);
+            expect(repoMock.getRecommendations).toHaveBeenCalledWith(dto.student_text);
         });
         it('gooit NotFoundException als er geen aanbevelingen zijn', async () => {
-            const dto: RecommendationInputDto = { studentInput: 'Ik hou van kunst' };
+            const dto: RecommendationInputDto = { student_text: 'Ik hou van kunst' };
             repoMock.getRecommendations.mockResolvedValue([]);
             await expect(service.getRecommendations(dto)).rejects.toBeInstanceOf(NotFoundException);    
         });
         it('gooit BadRequestException als de input leeg is', async () => {
-            const dto: RecommendationInputDto = { studentInput: '' };
+            const dto: RecommendationInputDto = { student_text: '' };
             await expect(service.getRecommendations(dto)).rejects.toBeInstanceOf(BadRequestException);
         });
         it('gooit InternalServerErrorException bij onverwachte fout', async () => {
-            const dto: RecommendationInputDto = { studentInput: 'Ik hou van geschiedenis' };
+            const dto: RecommendationInputDto = { student_text: 'Ik hou van geschiedenis' };
             repoMock.getRecommendations.mockRejectedValue(new Error('Database fout'));
             await expect(service.getRecommendations(dto)).rejects.toBeInstanceOf(InternalServerErrorException);
         });
