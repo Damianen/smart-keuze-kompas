@@ -27,6 +27,15 @@
           >
             Modules
           </a>
+          @if (userService.isLoggedIn()) {
+            <a
+              routerLink="/recommendations"
+              routerLinkActive="text-red-600 font-semibold"
+              class="text-gray-700 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+            >
+              Aanbevelingen
+            </a>
+          }
           @if (!userService.isLoggedIn()) {
             <a
               routerLink="/login"
@@ -93,6 +102,16 @@
             >
               Modules
             </a>
+            @if (userService.isLoggedIn()) {
+              <a
+                routerLink="/recommendations"
+                routerLinkActive="bg-red-50 text-red-600 font-semibold"
+                (click)="toggleMobileMenu()"
+                class="text-gray-700 hover:bg-gray-50 hover:text-red-600 px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+              >
+                Aanbevelingen
+              </a>
+            }
             @if (!userService.isLoggedIn()) {
               <a
                 routerLink="/login"

@@ -36,4 +36,15 @@ export class RecommenderService {
         catchError((err) => handleError(err)),
       );
   }
+
+  getSavedRecommendations(): Observable<KeuzeModuleAI[]> {
+    return this.http
+      .get<KeuzeModuleAI[]>(`${this.apiUrl}/save-recommendation/get`, {
+        withCredentials: true
+      })
+      .pipe(
+        map((response) => response),
+        catchError((err) => handleError(err)),
+      );
+  }
 }
