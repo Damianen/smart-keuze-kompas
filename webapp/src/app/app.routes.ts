@@ -4,33 +4,46 @@ import { LoginComponent } from './pages/login/login';
 import { RegisterComponent } from './pages/register/register';
 import { ModulesListComponent } from './pages/modules-list/modules-list';
 import { ModuleDetailComponent } from './pages/module-detail/module-detail';
+import { RecommendationsComponent } from './pages/recommendations/recommendations';
+import { SavedRecommendationsComponent } from './pages/saved-recommendations/saved-recommendations';
+import { RenderMode } from '@angular/ssr';
 import { authGuard } from '../guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'modules',
     component: ModulesListComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'modules/:id',
     component: ModuleDetailComponent,
-    canActivate: [authGuard]
+    canActivate: [authGuard],
+  },
+  {
+    path: 'recommendations',
+    component: RecommendationsComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'saved-recommendations',
+    component: SavedRecommendationsComponent,
+    canActivate: [authGuard],
   },
   {
     path: 'login',
-    component: LoginComponent
+    component: LoginComponent,
   },
   {
     path: 'register',
-    component: RegisterComponent
+    component: RegisterComponent,
   },
   {
     path: '**',
-    redirectTo: ''
-  }
+    redirectTo: '',
+  },
 ];

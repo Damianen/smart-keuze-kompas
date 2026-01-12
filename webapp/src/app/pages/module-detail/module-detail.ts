@@ -7,7 +7,7 @@ import { KeuzemoduleService } from '../../../services/keuzemodule.service';
   selector: 'app-module-detail',
   imports: [RouterLink],
   templateUrl: './module-detail.html',
-  styleUrl: './module-detail.css'
+  styleUrl: './module-detail.css',
 })
 export class ModuleDetailComponent implements OnInit {
   protected module = signal<KeuzeModule | null>(null);
@@ -17,11 +17,11 @@ export class ModuleDetailComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private keuzemoduleService: KeuzemoduleService
+    private keuzemoduleService: KeuzemoduleService,
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       const id = parseInt(params['id'], 10);
       this.loadModule(id);
     });
@@ -43,18 +43,17 @@ export class ModuleDetailComponent implements OnInit {
       error: (error) => {
         this.errorMessage.set(error.errorMessage || 'Fout bij het laden van de module');
         this.loading.set(false);
-      }
+      },
     });
   }
 
   protected enrollInModule(): void {
     console.log('Inschrijven voor module:', this.module()?.name);
-    alert('Inschrijving succesvol! (Dit is een demo)');
   }
 
   protected getLearningGoals(): string[] {
     const outcomes = this.module()?.learningoutcomes;
     if (!outcomes) return [];
-    return outcomes.split('\n').filter(line => line.trim().length > 0);
+    return outcomes.split('\n').filter((line) => line.trim().length > 0);
   }
 }

@@ -1,0 +1,146 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Page Header -->
+  <div class="bg-white border-b-2 border-red-600 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Opgeslagen Aanbevelingen</h1>
+      <p class="text-gray-600">Bekijk je eerder opgeslagen module-aanbevelingen</p>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+        <p class="text-sm">{{ errorMessage() }}</p>
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isLoading()) {
+      <div class="flex justify-center items-center py-12">
+        <div class="flex flex-col items-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mb-4"></div>
+          <p class="text-sm text-gray-600">Aanbevelingen laden...</p>
+        </div>
+      </div>
+    }
+
+    <!-- Recommendations List -->
+    @if (!isLoading() && savedRecommendations().length > 0) {
+      <div class="space-y-6">
+        @for (recommendation of savedRecommendations(); track recommendation.id) {
+          <article class="bg-white rounded-xl shadow-md overflow-hidden border-2 border-gray-100 hover:border-red-500 transition-all duration-300">
+            <div class="p-6">
+              <!-- Header -->
+              <div class="flex items-start justify-between mb-4">
+                <div class="flex-1">
+                  <div class="flex items-center gap-3 mb-2">
+                    <h3 class="text-xl font-bold text-gray-900">{{ recommendation.name }}</h3>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      {{ recommendation.level }}
+                    </span>
+                  </div>
+                  <p class="text-sm text-gray-500 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                    </svg>
+                    {{ recommendation.location }}
+                  </p>
+                </div>
+
+                <!-- Saved Badge -->
+                <div class="ml-4">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                    <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
+                    </svg>
+                    Opgeslagen
+                  </span>
+                </div>
+              </div>
+
+              <!-- AI Reasoning -->
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                <p class="text-sm font-medium text-blue-900 mb-1">Waarom deze module?</p>
+                <p class="text-sm text-blue-800">{{ recommendation.reason_text }}</p>
+              </div>
+
+              <!-- Scores Grid -->
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <!-- Hybrid Score -->
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-600 mb-1">Match Score</p>
+                  <p class="text-2xl font-bold" [class]="getScoreColor(recommendation.hybrid_score)">
+                    {{ (recommendation.hybrid_score * 100).toFixed(0) }}%
+                  </p>
+                </div>
+
+                <!-- Content Score -->
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-600 mb-1">Inhoud Match</p>
+                  <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.content_score)">
+                    {{ getScoreLabel(recommendation.content_score) }}
+                  </p>
+                </div>
+
+                <!-- Popularity Score -->
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-600 mb-1">Populariteit</p>
+                  <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.popularity_score)">
+                    {{ getScoreLabel(recommendation.popularity_score) }}
+                  </p>
+                </div>
+
+                <!-- Difficulty -->
+                <div class="bg-gray-50 rounded-lg p-3">
+                  <p class="text-xs text-gray-600 mb-1">Moeilijkheid</p>
+                  <p class="text-lg font-semibold" [class]="getDifficultyColor(recommendation.estimated_difficulty)">
+                    {{ getDifficultyLabel(recommendation.estimated_difficulty) }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- View Details Button -->
+              <div class="flex justify-end">
+                <button
+                  type="button"
+                  (click)="viewModuleDetail(recommendation.id)"
+                  class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center transition-colors"
+                >
+                  Bekijk volledige details
+                  <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <!-- Empty State -->
+    @if (!isLoading() && savedRecommendations().length === 0) {
+      <div class="bg-white rounded-xl shadow-md p-12 text-center">
+        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+        </svg>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">Geen opgeslagen aanbevelingen</h3>
+        <p class="text-gray-500 mb-6">
+          Je hebt nog geen aanbevelingen opgeslagen. Krijg gepersonaliseerde aanbevelingen op basis van je interesses!
+        </p>
+        <button
+          type="button"
+          (click)="getRecommendations()"
+          class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+        >
+          Krijg aanbevelingen
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+</div>
