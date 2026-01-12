@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Security, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from src.ai_model import recommend
@@ -15,6 +16,15 @@ API_TOKEN = os.getenv("API_TOKEN")
 api_key_header = APIKeyHeader(name="Token", auto_error=False)
 
 app = FastAPI()
+
+# CORS configuratie - allow all origins
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 async def verify_api_key(api_token: str = Security(api_key_header)):
     if not API_TOKEN:
