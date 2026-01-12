@@ -8,7 +8,7 @@ import { RecommenderService } from '../../../services/recommender.service';
   selector: 'app-recommendations',
   imports: [FormsModule],
   templateUrl: './recommendations.html',
-  styleUrl: './recommendations.css'
+  styleUrl: './recommendations.css',
 })
 export class RecommendationsComponent {
   protected studentInput = signal('');
@@ -21,7 +21,7 @@ export class RecommendationsComponent {
 
   constructor(
     private recommenderService: RecommenderService,
-    private router: Router
+    private router: Router,
   ) {}
 
   protected getRecommendations(): void {
@@ -37,7 +37,7 @@ export class RecommendationsComponent {
     this.successMessage.set('');
     this.hasSearched.set(true);
 
-    this.recommenderService.getRecommendations({ studentInput: input }).subscribe({
+    this.recommenderService.getRecommendations({ student_text: input }).subscribe({
       next: (recommendations) => {
         this.recommendations.set(recommendations);
         this.isLoading.set(false);
@@ -46,7 +46,7 @@ export class RecommendationsComponent {
       error: (error) => {
         this.errorMessage.set(error.errorMessage || 'Fout bij het ophalen van aanbevelingen');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -75,8 +75,8 @@ export class RecommendationsComponent {
     }
 
     const toSave: SaveRecommendation[] = this.recommendations()
-      .filter(rec => selected.has(rec.id))
-      .map(rec => ({
+      .filter((rec) => selected.has(rec.id))
+      .map((rec) => ({
         id: rec.id,
         name: rec.name,
         location: rec.location,
@@ -85,7 +85,7 @@ export class RecommendationsComponent {
         reason_text: rec.reason_text,
         popularity_score: rec.popularity_score,
         content_score: rec.content_score,
-        estimated_difficulty: rec.estimated_difficulty
+        estimated_difficulty: rec.estimated_difficulty,
       }));
 
     this.isLoading.set(true);
@@ -106,7 +106,7 @@ export class RecommendationsComponent {
       error: (error) => {
         this.errorMessage.set(error.errorMessage || 'Fout bij het opslaan van aanbevelingen');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
