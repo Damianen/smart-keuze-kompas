@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { KeuzeModule } from '../dtos/module.dto';
 import { handleError } from './error.service';
+import { ApiConfig } from '../utils/api-config';
 
 @Injectable({ providedIn: 'root' })
 export class KeuzemoduleService {
-  private apiUrl = 'http://localhost:3000/api/keuzemodules';
+  private apiUrl = `${ApiConfig.getApiUrl()}/api/keuzemodules`;
   constructor(private http: HttpClient) {}
 
   getAllKeuzeModules(): Observable<KeuzeModule[]> {

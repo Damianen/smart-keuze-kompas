@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
 import { KeuzeModuleAI, RecommendationInput, SaveRecommendation } from '../dtos/module.dto';
 import { handleError } from './error.service';
+import { ApiConfig } from '../utils/api-config';
 
 interface Response {
   message: string;
@@ -11,7 +12,7 @@ interface Response {
 
 @Injectable({ providedIn: 'root' })
 export class RecommenderService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = `${ApiConfig.getApiUrl()}/api`;
 
   constructor(private http: HttpClient) {}
 

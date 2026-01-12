@@ -3,10 +3,11 @@ import { Injectable } from '@angular/core';
 import { asyncScheduler, catchError, map, Observable, scheduled, tap } from 'rxjs';
 import { LoginDto, RegisterDto } from '../dtos/user.dto';
 import { handleError } from './error.service';
+import { ApiConfig } from '../utils/api-config';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/api/auth';
+  private apiUrl = `${ApiConfig.getApiUrl()}/api/auth`;
   private _isAuthenticated: boolean = false;
   private _userName: string = '';
   constructor(private http: HttpClient) {}
