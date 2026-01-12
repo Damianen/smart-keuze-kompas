@@ -23,7 +23,7 @@ export interface KeuzeModuleAI {
 }
 
 export interface RecommendationInput {
-  studentInput: string;
+  student_text: string;
 }
 
 export interface SaveRecommendation {
