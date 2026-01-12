@@ -8,8 +8,8 @@ export class RecommenderSystemRepository implements AbstractRecommenderSystemRep
 
     constructor(private readonly fastApiClient: FastApiClient) {}
 
-    async getRecommendations(studentInput: string): Promise<KeuzemoduleAIEntity[]> {
-        const results = await this.fastApiClient.getRecommendations({ params: { studentInput } });
+    async getRecommendations(student_text: string): Promise<KeuzemoduleAIEntity[]> {
+        const results = await this.fastApiClient.getRecommendations(student_text);
         return results;
     }
 

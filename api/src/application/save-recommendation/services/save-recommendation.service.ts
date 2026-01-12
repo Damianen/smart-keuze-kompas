@@ -1,8 +1,8 @@
-import { KeuzemoduleAIDto } from 'src/application/recommender-system/dto/keuzemodule.ai.dto';
 import { AbstractSaveRecommendation } from 'src/core/save-recommendations/contract/abstract.save-recommendation';
 import { KeuzemoduleRecommendationMapper } from '../mapper/mapper';
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from "@nestjs/common";
 import { SaveRecommendationDto } from '../dto/save-recommendation.dto';
+import { SavedRecommendationsDto } from '../dto/saved.recommendations.dto';
 
 @Injectable()
 export class SaveRecommendationService {
@@ -24,6 +24,24 @@ export class SaveRecommendationService {
                 throw error;
             }
             throw new InternalServerErrorException({message: "Er is een fout opgetreden bij het opslaan van de aanbevelingen.", status: false});
+        }
+    }
+    async getRecommendations(studentId: string): Promise<SavedRecommendationsDto> {
+        if (!studentId) {
+            throw new BadRequestException({message: "Ongeldig student ID.", status: false});
+        }
+        try{
+            const savedRecommendations = await this.saveRecommendationRepository.getRecommendations(studentId);
+            if (!savedRecommendations) {
+                throw new NotFoundException({message: "Er zijn geen opgeslagen aanbevelingen gevonden voor deze student.", status: false});
+            }
+            return savedRecommendations ? savedRecommendations as SavedRecommendationsDto : new SavedRecommendationsDto([], new Date());
+
+        }catch (error){
+            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+                throw error;
+            }
+            throw new InternalServerErrorException({message: "Er is een fout opgetreden bij het ophalen van de opgeslagen aanbevelingen.", status: false});
         }
     }
     private InputValidation(studentId: string, recommendationDto: SaveRecommendationDto[]): void {
