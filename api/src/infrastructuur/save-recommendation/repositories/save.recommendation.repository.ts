@@ -3,19 +3,6 @@ import { KeuzemoduleAIEntity } from "../../../core/recommender-system/entity/keu
 import { Injectable, Inject } from "@nestjs/common";
 import { Db, ObjectId } from "mongodb";
 import { SavedRecommendationsEntity } from "src/core/save-recommendations/entity/saved.recommendations.entity";
-import { UpdateFilter } from "mongodb";
-
-
-export interface RecommendationItem {
-  _id: string;
-  items: KeuzemoduleAIEntity[];
-  savedAt: Date;
-}
-
-export interface StudentDocument {
-  _id: ObjectId;
-  recommendations: RecommendationItem[];
-}
 @Injectable()
 export class SaveRecommendationRepository extends AbstractSaveRecommendation {
 
