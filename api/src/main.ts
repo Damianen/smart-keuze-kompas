@@ -18,6 +18,7 @@ async function bootstrap() {
 			transform: true,
 			forbidNonWhitelisted: true,
 			forbidUnknownValues: true,
+			transformOptions: { enableImplicitConversion: true },
 			exceptionFactory: (errors) => {
 				const errorObject: Record<string, string> = {};
 				errors.forEach((err) => {

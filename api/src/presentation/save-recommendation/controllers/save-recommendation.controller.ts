@@ -1,4 +1,4 @@
-import { Controller, UseGuards, HttpCode,HttpStatus, Post, Get, Body, ParseArrayPipe } from "@nestjs/common";
+import { Controller, UseGuards, HttpCode,HttpStatus, Post, Body, ParseArrayPipe } from "@nestjs/common";
 import { Throttle, seconds } from "@nestjs/throttler";
 import { SaveRecommendationDto } from "src/application/save-recommendation/dto/save-recommendation.dto";
 import { SaveRecommendationService } from "src/application/save-recommendation/services/save-recommendation.service";
