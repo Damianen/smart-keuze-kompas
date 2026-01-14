@@ -12,7 +12,11 @@
       </h2>
       <p class="text-xl md:text-2xl text-red-100 mb-10 max-w-3xl mx-auto leading-relaxed">
         Ontdek de modules die perfect passen bij jouw studierichting en interesses.
-        Elke module is 5 ECTS en loopt gedurende één periode.
+        @if (!isLoading() && ectsPerModule() > 0) {
+          Elke module is {{ ectsPerModule() }} ECTS en loopt gedurende één periode.
+        } @else {
+          Elke module is 5 ECTS en loopt gedurende één periode.
+        }
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <a routerLink="/modules" class="inline-flex items-center px-8 py-4 bg-white text-red-600 font-bold rounded-lg hover:bg-red-50 transition-all transform hover:scale-105 shadow-lg">
@@ -30,15 +34,27 @@
     <!-- Stats -->
     <div class="mt-20 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-        <div class="text-4xl font-bold text-white mb-2">6</div>
+        @if (isLoading()) {
+          <div class="text-4xl font-bold text-white mb-2">...</div>
+        } @else {
+          <div class="text-4xl font-bold text-white mb-2">{{ moduleCount() }}</div>
+        }
         <div class="text-red-100">Beschikbare Modules</div>
       </div>
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-        <div class="text-4xl font-bold text-white mb-2">5</div>
+        @if (isLoading()) {
+          <div class="text-4xl font-bold text-white mb-2">...</div>
+        } @else {
+          <div class="text-4xl font-bold text-white mb-2">{{ ectsPerModule() }}</div>
+        }
         <div class="text-red-100">ECTS per Module</div>
       </div>
       <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
-        <div class="text-4xl font-bold text-white mb-2">3</div>
+        @if (isLoading()) {
+          <div class="text-4xl font-bold text-white mb-2">...</div>
+        } @else {
+          <div class="text-4xl font-bold text-white mb-2">{{ periodCount() }}</div>
+        }
         <div class="text-red-100">Periodes</div>
       </div>
     </div>

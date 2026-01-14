@@ -97,8 +97,15 @@
         <!-- Results Count -->
         <div class="mt-4 pt-4 border-t border-gray-200">
           <p class="text-sm text-gray-600">
-            <span class="font-semibold text-gray-900">{{ modules().length }}</span>
-            {{ modules().length === 1 ? 'module' : 'modules' }} gevonden
+            @if (modules().length > 0) {
+              <span>
+                Toon {{ startIndex() }}-{{ endIndex() }}
+                van <span class="font-semibold text-gray-900">{{ modules().length }}</span>
+                {{ modules().length === 1 ? 'module' : 'modules' }}
+              </span>
+            } @else {
+              <span class="font-semibold text-gray-900">0</span> modules gevonden
+            }
           </p>
         </div>
       </div>
@@ -116,7 +123,7 @@
       <!-- Modules Grid -->
       @if (!isSearching() && modules().length > 0) {
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          @for (module of modules(); track module.id) {
+          @for (module of paginatedModules(); track module.id) {
             <article
               class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-red-500 cursor-pointer transform hover:-translate-y-1"
               (click)="viewModule(module.id)"
@@ -164,6 +171,60 @@
             </article>
           }
         </div>
+
+        <!-- Pagination Controls -->
+        @if (totalPages() > 1) {
+          <div class="mt-8 flex items-center justify-center gap-2">
+            <!-- Previous Button -->
+            <button
+              type="button"
+              (click)="previousPage()"
+              [disabled]="currentPage() === 1"
+              [class.opacity-50]="currentPage() === 1"
+              [class.cursor-not-allowed]="currentPage() === 1"
+              class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 disabled:hover:bg-white transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+
+            <!-- Page Numbers -->
+            @for (pageNum of pageNumbers(); track pageNum; let i = $index) {
+              @if (i > 0 && pageNum - pageNumbers()[i - 1] > 1) {
+                <span class="px-2 text-gray-400">...</span>
+              }
+              <button
+                type="button"
+                (click)="goToPage(pageNum)"
+                [class.bg-red-600]="currentPage() === pageNum"
+                [class.text-white]="currentPage() === pageNum"
+                [class.border-red-600]="currentPage() === pageNum"
+                [class.bg-white]="currentPage() !== pageNum"
+                [class.text-gray-700]="currentPage() !== pageNum"
+                [class.border-gray-300]="currentPage() !== pageNum"
+                [class.hover:bg-gray-50]="currentPage() !== pageNum"
+                class="px-4 py-2 border-2 font-medium rounded-lg transition-colors min-w-[44px]"
+              >
+                {{ pageNum }}
+              </button>
+            }
+
+            <!-- Next Button -->
+            <button
+              type="button"
+              (click)="nextPage()"
+              [disabled]="currentPage() === totalPages()"
+              [class.opacity-50]="currentPage() === totalPages()"
+              [class.cursor-not-allowed]="currentPage() === totalPages()"
+              class="px-4 py-2 bg-white border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 disabled:hover:bg-white transition-colors"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+        }
       }
 
       <!-- Empty State -->
