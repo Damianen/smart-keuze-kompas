@@ -5,10 +5,11 @@ import { LoggerModule } from "src/infrastructuur/logger/logger.module";
 import { SaveRecommendationController } from "../save-recommendation/controllers/save-recommendation.controller"
 import { SaveRecommendationModule } from "src/infrastructuur/save-recommendation/save-recommendation.module";
 import { GetRecommendationsController } from "./controllers/get-recommandations.controller";
+import { DeleteRecommendationsController } from "./controllers/delete-recommendations.controller";
 
 @Module({
     imports: [SaveRecommendationModule, AuthModule, LoggerModule],
-    controllers: [SaveRecommendationController, GetRecommendationsController],
+    controllers: [SaveRecommendationController, GetRecommendationsController, DeleteRecommendationsController],
     providers: [SaveRecommendationService],
     exports: [SaveRecommendationService]
 })

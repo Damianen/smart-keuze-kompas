@@ -44,6 +44,50 @@ export class SaveRecommendationService {
             throw new InternalServerErrorException({message: "Er is een fout opgetreden bij het ophalen van de opgeslagen aanbevelingen.", status: false});
         }
     }
+    async deleteRecommendations(studentId: string, moduleId: string, collectionId: string): Promise<{message: string, status: boolean}> {
+
+        if (!studentId) {
+            throw new BadRequestException({message: "Ongeldig student ID.", status: false});
+        }
+        if (!moduleId) {
+            throw new BadRequestException({message: "Ongeldig module ID.", status: false});
+        }
+        if (!collectionId) {
+            throw new BadRequestException({message: "Ongeldig collectie ID.", status: false});
+        }
+        try {
+            const result = await this.saveRecommendationRepository.deleteRecommendations(studentId, moduleId, collectionId);
+            if (!result.status) {
+                throw new NotFoundException({message: "De opgegeven aanbeveling is niet gevonden in de collectie.", status: false});
+            }
+            return result;
+        } catch (error) {
+            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+                throw error;
+            }
+            throw new InternalServerErrorException({message: "Er is een fout opgetreden bij het verwijderen van de aanbevelingen.", status: false});
+        }
+    }
+    async deleteCollection(studentId: string, collectionId: string): Promise<{message: string, status: boolean}> {
+        if (!studentId) {
+            throw new BadRequestException({message: "Ongeldig student ID.", status: false});
+        }
+        if (!collectionId) {
+            throw new BadRequestException({message: "Ongeldig collectie ID.", status: false});
+        }
+        try {
+            const result = await this.saveRecommendationRepository.deleteCollection(studentId, collectionId);
+            if (!result.status) {
+                throw new NotFoundException({message: "De opgegeven collectie is niet gevonden.", status: false});
+            }
+            return result;
+        }catch (error) {
+            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+                throw error;
+            }
+            throw new InternalServerErrorException({message: "Er is een fout opgetreden bij het verwijderen van de collectie.", status: false});
+        }
+    }
     private InputValidation(studentId: string, recommendationDto: SaveRecommendationDto[]): void {
         if (!studentId) {
             throw new BadRequestException({message: "Ongeldig student ID.", status: false});

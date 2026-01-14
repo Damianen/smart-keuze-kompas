@@ -3,6 +3,19 @@ import { KeuzemoduleAIEntity } from "../../../core/recommender-system/entity/keu
 import { Injectable, Inject } from "@nestjs/common";
 import { Db, ObjectId } from "mongodb";
 import { SavedRecommendationsEntity } from "src/core/save-recommendations/entity/saved.recommendations.entity";
+import { UpdateFilter } from "mongodb";
+
+
+export interface RecommendationItem {
+  _id: string;
+  items: KeuzemoduleAIEntity[];
+  savedAt: Date;
+}
+
+export interface StudentDocument {
+  _id: ObjectId;
+  recommendations: RecommendationItem[];
+}
 @Injectable()
 export class SaveRecommendationRepository extends AbstractSaveRecommendation {
 
@@ -30,5 +43,21 @@ export class SaveRecommendationRepository extends AbstractSaveRecommendation {
             savedAt: student?.savedAt
         };
         return student ? collection : null;
+    }
+    async deleteRecommendations(studentId: string, moduleId: string, collectionId: string): Promise<{message: string, status: boolean}> {
+        console.log(await this.dbConnection.collection<SavedRecommendationsEntity>('student').findOne({ _id: new ObjectId(studentId), recommendations: { $elemMatch: { _id: new ObjectId(collectionId) } } }));
+        const result = await this.dbConnection.collection<StudentDocument>('student').updateOne(
+            { _id: new ObjectId(studentId), recommendations: { $elemMatch: { _id: new ObjectId(collectionId) } } },
+            { $pull: { "recommendations.$.items": { _id: moduleId } } },
+            
+        );
+        return {message: "Aanbevelingen zijn succesvol verwijderd", status: result.modifiedCount > 0};
+    }
+    async deleteCollection(studentId: string, collectionId: string): Promise<{message: string, status: boolean}> {
+        const result =  await this.dbConnection.collection<SavedRecommendationsEntity>('student').updateOne(
+            { _id: new ObjectId(studentId), recommendations: { $elemMatch: { _id: new ObjectId(collectionId) } } },
+            { $pull: { recommendations: { _id: new ObjectId(collectionId) } } }
+        );
+        return {message: "Collectie is succesvol verwijderd", status: result.modifiedCount > 0};
     }
 }
