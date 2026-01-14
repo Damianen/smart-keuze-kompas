@@ -1,5 +1,6 @@
 export class KeuzemoduleAIEntity {
     constructor(
+    public readonly _id: string,
     public readonly id: number,
     public readonly name: string,
     public readonly level: string,

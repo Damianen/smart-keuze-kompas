@@ -1,6 +1,7 @@
 import { KeuzemoduleAIDto } from "src/application/recommender-system/dto/keuzemodule.ai.dto";
 import { KeuzemoduleAIEntity } from "src/core/recommender-system/entity/keuzemodule.ai.entity";
 import { SaveRecommendationDto } from "../dto/save-recommendation.dto";
+import { ObjectId } from "mongodb";
 
 
 export class KeuzemoduleRecommendationMapper {
@@ -9,6 +10,7 @@ export class KeuzemoduleRecommendationMapper {
         const entities: KeuzemoduleAIEntity[] = [];
         for (const item of dto) {
             entities.push({
+                _id: new ObjectId().toString(),
                 id: item.id,
                 name: item.name,
                 location: item.location,
