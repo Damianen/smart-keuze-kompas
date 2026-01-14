@@ -11,6 +11,7 @@ export class SaveRecommendationRepository extends AbstractSaveRecommendation {
     async saveRecommendation(studentId: string, recommendation: KeuzemoduleAIEntity[]): Promise<{message: string, status: boolean}> {
 
         const collection: any = {
+            _id: new ObjectId(),
             items: recommendation,
             savedAt: new Date()
         };
