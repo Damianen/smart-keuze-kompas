@@ -10,6 +10,11 @@ interface Response {
   status: boolean;
 }
 
+interface SavedRecommendationsResponse {
+  recommendations: KeuzeModuleAI[];
+  savedAt: string;
+}
+
 @Injectable({ providedIn: 'root' })
 export class RecommenderService {
   private apiUrl = `${ApiConfig.getApiUrl()}/api`;
@@ -40,11 +45,11 @@ export class RecommenderService {
 
   getSavedRecommendations(): Observable<KeuzeModuleAI[]> {
     return this.http
-      .get<KeuzeModuleAI[]>(`${this.apiUrl}/save-recommendation/get`, {
+      .get<SavedRecommendationsResponse>(`${this.apiUrl}/get-recommendations/get`, {
         withCredentials: true
       })
       .pipe(
-        map((response) => response),
+        map((response) => response.recommendations),
         catchError((err) => handleError(err)),
       );
   }

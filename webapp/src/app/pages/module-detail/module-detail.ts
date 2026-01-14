@@ -13,6 +13,7 @@ export class ModuleDetailComponent implements OnInit {
   protected module = signal<KeuzeModule | null>(null);
   protected loading = signal(true);
   protected errorMessage = signal('');
+  protected linkCopied = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -55,5 +56,21 @@ export class ModuleDetailComponent implements OnInit {
     const outcomes = this.module()?.learningoutcomes;
     if (!outcomes) return [];
     return outcomes.split('\n').filter((line) => line.trim().length > 0);
+  }
+
+  protected async copyLink(): Promise<void> {
+    const url = window.location.href;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      this.linkCopied.set(true);
+
+      // Reset the copied state after 2 seconds
+      setTimeout(() => {
+        this.linkCopied.set(false);
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
   }
 }
