@@ -46,7 +46,7 @@ export class SaveRecommendationRepository extends AbstractSaveRecommendation {
     }
     async deleteRecommendations(studentId: string, moduleId: string, collectionId: string): Promise<{message: string, status: boolean}> {
         console.log(await this.dbConnection.collection<SavedRecommendationsEntity>('student').findOne({ _id: new ObjectId(studentId), recommendations: { $elemMatch: { _id: new ObjectId(collectionId) } } }));
-        const result = await this.dbConnection.collection<StudentDocument>('student').updateOne(
+        const result = await this.dbConnection.collection<SavedRecommendationsEntity>('student').updateOne(
             { _id: new ObjectId(studentId), recommendations: { $elemMatch: { _id: new ObjectId(collectionId) } } },
             { $pull: { "recommendations.$.items": { _id: moduleId } } },
             
