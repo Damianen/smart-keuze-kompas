@@ -11,12 +11,12 @@ export class SaveRecommendationRepository extends AbstractSaveRecommendation {
     async saveRecommendation(studentId: string, recommendation: KeuzemoduleAIEntity[]): Promise<{message: string, status: boolean}> {
 
         const collection: any = {
-            recommendations: recommendation,
+            items: recommendation,
             savedAt: new Date()
-        }
+        };
         const result = await this.dbConnection.collection('student').updateOne(
             { _id: new ObjectId(studentId) },
-            { $set: collection }
+            { $push: { recommendations: collection } }
         );
         return {message: "Aanbevelingen zijn succesvol opgeslagen", status: result.modifiedCount > 0};
     }
@@ -27,7 +27,7 @@ export class SaveRecommendationRepository extends AbstractSaveRecommendation {
         const collection: any = {
             recommendations: student?.recommendations || [],
             savedAt: student?.savedAt
-        }
+        };
         return student ? collection : null;
     }
 }
