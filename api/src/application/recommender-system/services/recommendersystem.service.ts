@@ -14,8 +14,7 @@ export class RecommenderSystemService {
     ) {}
     async getRecommendations(dto: RecommendationInputDto): Promise<KeuzemoduleAIDto[]> {
         if (!dto.student_text){
-            this.logger.warn('De input voor aanbevelingen is leeg.');
-            throw new BadRequestException('De input voor aanbevelingen mag niet leeg zijn.');
+            throw new BadRequestException('De input voor aanbevelingen mag niet leeg zijn.' );
         }
         try {
             const recommendations = await this.recommenderSystemRepository.getRecommendations(dto.student_text);
@@ -26,14 +25,19 @@ export class RecommenderSystemService {
             if (!mappedRecommendations) {
                 throw new NotFoundException('Geen aanbevelingen gevonden na mapping.');
             }
+            this.logger.log('Aanbevelingen succesvol opgehaald en gemapt.', { recommendations: mappedRecommendations, input: dto.student_text });
             return mappedRecommendations;
         }
         catch (error) {
             if (error instanceof NotFoundException) {
-                this.logger.warn('Geen aanbevelingen gevonden.', error);
+                this.logger.warn('Geen aanbevelingen gevonden.', { error: error, input: dto.student_text});
                 throw error;
             }
-            this.logger.error('Fout bij het ophalen van aanbevelingen.', error);
+            if(error instanceof BadRequestException) {
+                this.logger.warn('Ongeldige aanvraag voor aanbevelingen.', { error: error, input: dto.student_text});
+                throw error;
+            }
+            this.logger.error('Fout bij het ophalen van aanbevelingen.', {error: error, input: dto.student_text});
             throw new InternalServerErrorException('Er is een fout opgetreden bij het ophalen van aanbevelingen.', error.message);
         }
     }

@@ -29,19 +29,18 @@ export class AuthService {
             this.logger.log(`Nieuwe student geregistreerd:`, {email: dto.email, name: dto.name, surname: dto.surname});
             return await this.authRepository.create(student);
         } catch (error) {
-            this.logger.error(`Fout bij registreren: ${error.message}`, {error: error});
             throw new InternalServerErrorException("Error bij registreren");
         }
     }
     async login(dto: LoginStudentDto): Promise<string> {
         const student = await this.authRepository.findByEmail(dto.email);
         if (!student) {
-            this.logger.warn(`Inlog poging met onbekend email: ${dto.email}`, {email: dto.email });
+            this.logger.warn(`NotFoundException bij inloggen voor email: ${dto.email}`, {email: dto.email});
             throw new NotFoundException("Student niet gevonden");
         }
         const isPasswordValid = await this.hashingService.compare(dto.password, student.passwordHash);
         if (!isPasswordValid) {
-            this.logger.warn(`Ongeldige wachtwoord poging voor email: ${dto.email}`, {email: dto.email, id: student.id, name: student.name, surname: student.surname});
+            this.logger.warn(`UnauthorizedException bij inloggen voor email: ${dto.email}`, {email: dto.email});
             throw new UnauthorizedException("Ongeldig wachtwoord of email");
         }
         try{
