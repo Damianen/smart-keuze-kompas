@@ -20,15 +20,19 @@ export class KeuzeModuleRepository extends AbstractKeuzeModuleRepository {
     async getByAttribute(name: string, location?: string, level?: string): Promise<KeuzeModule[]> {
 
         const filter: any = {}
-        filter.$or = [{name: {$regex: name, $options: 'i'}}];
+        filter.$or = [
+            {name: {$regex: name, $options: 'i'}}, 
+            {description: {$regex: name, $options: 'i'}}, 
+            {shortdescription: {$regex: name, $options: 'i'}}
+        ];
         if(location){
             filter.location = location;
         }
         if(level){
             filter.level = level;
         }
-        const keuzemoduleCollection = this.dbConnection.collection<KeuzeModule>("vkm").find({ ...filter }).toArray();
-        return await keuzemoduleCollection;
+        const keuzemoduleCollection = await this.dbConnection.collection<KeuzeModule>("vkm").find({ ...filter }).toArray();
+        return  keuzemoduleCollection;
     }
 
 }
