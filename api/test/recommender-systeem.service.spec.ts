@@ -4,13 +4,20 @@ import { AbstractRecommenderSystemRepository } from 'src/core/recommender-system
 import { RecommenderSystemService } from 'src/application/recommender-system/services/recommendersystem.service';
 import { RecommendationInputDto } from 'src/application/recommender-system/dto/recommentation.input.ai.dto';
 import { KeuzemoduleAIDto } from 'src/application/recommender-system/dto/keuzemodule.ai.dto';
+import { AbstractLogger } from 'src/core/logger/abstract.logger';
+import { KeuzemoduleAIEntity } from 'src/core/recommender-system/entity/keuzemodule.ai.entity';
 
 
 describe('RecommenderSystemService', () => {
     let service: RecommenderSystemService;
 
-    const repoMock: jest.Mocked<AbstractRecommenderSystemRepository> = {
+    const repoMock = {
         getRecommendations: jest.fn(),
+    };
+    const loggerMock = {
+        log: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
     };
     beforeEach(async () => {
         jest.clearAllMocks();
@@ -18,6 +25,7 @@ describe('RecommenderSystemService', () => {
         providers: [
             RecommenderSystemService,
             { provide: AbstractRecommenderSystemRepository, useValue: repoMock },
+            { provide: AbstractLogger, useValue: loggerMock },
         ],
         }).compile();
         service = moduleRef.get(RecommenderSystemService);
@@ -30,7 +38,6 @@ describe('RecommenderSystemService', () => {
                 { id: 1, name: 'Inleiding tot Programmeren', location: 'Leer de basis van programmeren.', estimated_difficulty: 3, content_score: 8, popularity_score: 9, hybrid_score: 8.5, reason_text: 'Deze module past goed bij je interesse in programmeren.', level: 'Beginner' },
                 { id: 2, name: 'Geavanceerde Wiskunde', location: 'Campus B', estimated_difficulty: 4, content_score: 9, popularity_score: 7, hybrid_score: 8.0, reason_text: 'Deze module sluit aan bij je liefde voor wiskunde.', level: 'Gevorderd' },
             ];
-
             repoMock.getRecommendations.mockResolvedValue(recommendations);
             const result = await service.getRecommendations(dto);
 

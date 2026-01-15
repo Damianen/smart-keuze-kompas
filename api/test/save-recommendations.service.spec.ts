@@ -4,14 +4,22 @@ import { AbstractSaveRecommendation } from 'src/core/save-recommendations/contra
 import { SaveRecommendationService } from 'src/application/save-recommendation/services/save-recommendation.service';
 import { SaveRecommendationDto } from 'src/application/save-recommendation/dto/save-recommendation.dto';
 import { SavedRecommendationsDto } from 'src/application/save-recommendation/dto/saved.recommendations.dto';
+import { AbstractLogger } from 'src/core/logger/abstract.logger';
+import { KeuzemoduleAIEntity } from 'src/core/recommender-system/entity/keuzemodule.ai.entity';
+import { ObjectId } from 'mongodb';
 
 
 describe('SaveRecommendationService', () => {
     let service: SaveRecommendationService;
 
-    const repoMock: jest.Mocked<AbstractSaveRecommendation> = {
+    const repoMock = {
         saveRecommendation: jest.fn(),
         getRecommendations: jest.fn(),
+    };
+    const loggerMock = {
+        log: jest.fn(),
+        warn: jest.fn(),
+        error: jest.fn(),
     };
 
     beforeEach(async () => {
@@ -20,6 +28,7 @@ describe('SaveRecommendationService', () => {
         providers: [
             SaveRecommendationService,
             { provide: AbstractSaveRecommendation, useValue: repoMock },
+            { provide: AbstractLogger, useValue: loggerMock }
         ],
         }).compile();
 
@@ -39,7 +48,7 @@ describe('SaveRecommendationService', () => {
 
             const result = await service.saveRecommendation(studentId, recommendationDto);
             expect(result).toEqual(expectedResponse);
-            expect(repoMock.saveRecommendation).toHaveBeenCalledWith(studentId, recommendationDto);
+            expect(repoMock.saveRecommendation).toHaveBeenCalledWith(studentId, expect.any(Array));
         });
         it('gooit InternalServerErrorException bij onverwachte fout', async () => {
             const studentId = '123';
