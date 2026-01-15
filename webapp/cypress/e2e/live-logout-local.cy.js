@@ -1,8 +1,8 @@
 const BASE_URL = 'http://localhost:4200';
 
 const testUser = {
-  email: 'amineachouche20077@gmail.com',
-  password: 'AmineAchouche1',
+  email: Cypress.env('TEST_USER_EMAIL'),
+  password: Cypress.env('TEST_USER_PASSWORD'),
 };
 
 describe('Logout Flow - Live Backend', () => {
