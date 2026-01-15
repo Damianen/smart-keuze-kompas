@@ -48,7 +48,7 @@ jobs:
 
       - name: Run tests
         working-directory: ./webapp
-        run: npm test -- --run --reporter=verbose
+        run: npm test
 
   push-to-release:
     needs: [test-backend, test-frontend]
