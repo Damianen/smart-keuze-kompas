@@ -37,3 +37,14 @@ export interface SaveRecommendation {
   content_score: number;
   estimated_difficulty: number;
 }
+
+export interface SavedCollection {
+  _id: string;
+  items: KeuzeModuleAI[];
+  savedAt: string;
+}
+
+export interface SavedRecommendationsResponse {
+  recommendations: SavedCollection[];
+  savedAt: string;
+}

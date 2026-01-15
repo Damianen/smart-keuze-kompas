@@ -1,18 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable } from 'rxjs';
-import { KeuzeModuleAI, RecommendationInput, SaveRecommendation } from '../dtos/module.dto';
+import { KeuzeModuleAI, RecommendationInput, SaveRecommendation, SavedCollection, SavedRecommendationsResponse } from '../dtos/module.dto';
 import { handleError } from './error.service';
 import { ApiConfig } from '../utils/api-config';
 
 interface Response {
   message: string;
   status: boolean;
-}
-
-interface SavedRecommendationsResponse {
-  recommendations: KeuzeModuleAI[];
-  savedAt: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -43,13 +38,35 @@ export class RecommenderService {
       );
   }
 
-  getSavedRecommendations(): Observable<KeuzeModuleAI[]> {
+  getSavedRecommendations(): Observable<SavedCollection[]> {
     return this.http
       .get<SavedRecommendationsResponse>(`${this.apiUrl}/get-recommendations/get`, {
         withCredentials: true
       })
       .pipe(
         map((response) => response.recommendations),
+        catchError((err) => handleError(err)),
+      );
+  }
+
+  deleteModule(collectionId: string, moduleId: number): Observable<Response> {
+    return this.http
+      .delete<Response>(`${this.apiUrl}/delete-recommendations/delete/${collectionId}/${moduleId}`, {
+        withCredentials: true
+      })
+      .pipe(
+        map((response) => response),
+        catchError((err) => handleError(err)),
+      );
+  }
+
+  deleteCollection(collectionId: string): Observable<Response> {
+    return this.http
+      .delete<Response>(`${this.apiUrl}/delete-recommendations/delete-collection/${collectionId}`, {
+        withCredentials: true
+      })
+      .pipe(
+        map((response) => response),
         catchError((err) => handleError(err)),
       );
   }

@@ -97,10 +97,32 @@
                 <button
                   type="button"
                   (click)="enrollInModule()"
-                  class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-700 transition-colors mb-4"
+                  [disabled]="saving()"
+                  [class.bg-green-600]="saveSuccess()"
+                  [class.hover:bg-green-700]="saveSuccess()"
+                  [class.bg-red-600]="!saveSuccess()"
+                  [class.hover:bg-red-700]="!saveSuccess() && !saving()"
+                  [class.opacity-50]="saving()"
+                  [class.cursor-not-allowed]="saving()"
+                  class="w-full text-white font-bold py-3 px-4 rounded-lg transition-colors mb-4 flex items-center justify-center gap-2"
                 >
-                  Opslaan
+                  @if (saving()) {
+                    <div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    Opslaan...
+                  } @else if (saveSuccess()) {
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                    Opgeslagen!
+                  } @else {
+                    Opslaan
+                  }
                 </button>
+                @if (saveError()) {
+                  <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p class="text-sm text-red-600 text-center">{{ saveError() }}</p>
+                  </div>
+                }
                 <p class="text-sm text-gray-500 text-center">
                   Opgeslagen modules vind je terug in je profiel
                 </p>
