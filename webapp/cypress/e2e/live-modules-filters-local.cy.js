@@ -1,0 +1,49 @@
+const BASE_URL = 'http://localhost:4200';
+
+const testUser = {
+  email: 'amineachouche20077@gmail.com',
+  password: 'AmineAchouche1',
+};
+
+const selectFirstOptionIfAny = (selector) => {
+  cy.get(selector).then(($select) => {
+    const options = $select.find('option');
+    const firstValue = options.length > 1 ? options.eq(1).val() : null;
+    if (firstValue) {
+      cy.wrap($select).select(firstValue, { force: true });
+    }
+  });
+};
+
+describe('Modules filters (lokale frontend, online backend)', () => {
+  it('kan zoeken, niveau/locatie kiezen en filters wissen', () => {
+    cy.intercept('POST', '**/api/auth/login').as('login');
+    cy.intercept('GET', '**/api/keuzemodules/getAll').as('getAllModules');
+    cy.intercept('GET', '**/api/keuzemodules/search*').as('searchModules');
+
+    cy.visit(`${BASE_URL}/login`);
+    cy.get('input[name="email"]').type(testUser.email);
+    cy.get('input[name="password"]').type(testUser.password, { log: false });
+    cy.get('button[type="submit"]').click();
+
+    cy.wait('@login', { timeout: 60000 });
+    cy.url({ timeout: 60000 }).should('include', '/modules');
+    cy.wait('@getAllModules', { timeout: 60000 });
+
+    cy.get('#search').type('AI');
+    cy.wait(1000);
+
+    selectFirstOptionIfAny('#level');
+    cy.wait(500);
+
+    selectFirstOptionIfAny('#location');
+    cy.wait(500);
+
+    cy.contains('Wis filters').click();
+    cy.wait(500);
+
+    cy.get('#search').should('have.value', '');
+    cy.get('#level').should('have.value', '');
+    cy.get('#location').should('have.value', '');
+  });
+});
