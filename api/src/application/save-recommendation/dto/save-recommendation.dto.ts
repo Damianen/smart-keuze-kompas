@@ -1,4 +1,7 @@
-import { IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { IsDefined, IsNotEmpty, IsNumber, IsString} from 'class-validator';
+import { Transform } from 'class-transformer';
+import { sanitizeInput } from 'src/utils/utils';
+
 
 export class SaveRecommendationDto {
 
@@ -8,14 +11,20 @@ export class SaveRecommendationDto {
 
     @IsNotEmpty({message: 'Naam mag niet leeg zijn'})
     @IsString({message: 'Naam moet een string zijn'})
+    @IsDefined({message: 'ID is verplicht'})
+    @Transform(({ value }) => sanitizeInput(value))
     name: string;
 
     @IsNotEmpty({message: 'Locatie mag niet leeg zijn'})
     @IsString({message: 'Locatie moet een string zijn'})
+    @IsDefined({message: 'Locatie is verplicht'})
+    @Transform(({ value }) => sanitizeInput(value))
     location: string;
 
     @IsNotEmpty({message: 'Niveau mag niet leeg zijn'})
     @IsString({message: 'Niveau moet een string zijn'})
+    @IsDefined({message: 'Niveau is verplicht'})
+    @Transform(({ value }) => sanitizeInput(value))
     level: string;
 
     @IsNotEmpty({message: 'Hybride score mag niet leeg zijn'})
@@ -24,6 +33,8 @@ export class SaveRecommendationDto {
 
     @IsNotEmpty({message: 'Reden tekst mag niet leeg zijn'})
     @IsString({message: 'Reden tekst moet een string zijn'})
+    @IsDefined({message: 'Reden tekst is verplicht'})
+    @Transform(({ value }) => sanitizeInput(value))
     reason_text: string;
 
     @IsNotEmpty({message: 'Populariteitsscore mag niet leeg zijn'})

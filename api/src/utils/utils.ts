@@ -6,5 +6,5 @@ export function normalizeString(input: string): string {
 }
 
 export function sanitizeInput(input: string): string {
-    return decodeURIComponent(input).normalize('NFKC').trim().replace(/\s+/g, ' ');
+    return decodeURIComponent(input).normalize('NFKC').replace(/[<>$;]/g, '').trim().replace(/\s+/g, ' ');
 }
