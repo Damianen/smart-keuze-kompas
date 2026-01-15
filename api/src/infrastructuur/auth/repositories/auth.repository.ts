@@ -11,7 +11,7 @@ export class AuthRepository extends AbstractAuthRepository {
 
     async findByEmail(email: string): Promise<Student | null> {
         const studentCollection = this.dbConnection.collection<Student>("student");
-        const student = await studentCollection.findOne({ email: email });
+        const student = await studentCollection.findOne({ email: { $eq: email } });
         return student ? new Student(student._id.toString(), student.email, student.surname, student.passwordHash, student.name, student.birthDate) : null;
     }
 

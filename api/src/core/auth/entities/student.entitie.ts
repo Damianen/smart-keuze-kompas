@@ -1,11 +1,11 @@
 export class Student {
     id: string;
     name: string;
-    birthDate: Date;
+    birthDate: string;
     email: string;
     surname: string;
     passwordHash: string;
-    constructor(id: string, email: string, surname: string, passwordHash: string, name: string, birthDate: Date) {
+    constructor(id: string, email: string, surname: string, passwordHash: string, name: string, birthDate: string) {
         this.id = id;
         this.email = email;
         this.surname = surname;
