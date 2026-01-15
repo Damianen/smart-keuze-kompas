@@ -19,8 +19,10 @@ export class KeuzeModuleService {
            return keuzeModuleDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
+                this.logger.warn('Geen keuze modules gevonden.', {error});
                 throw error;
             }
+            this.logger.error('Fout bij het ophalen van keuze modules.', {error});
             throw new InternalServerErrorException("Er is een fout opgetreden");
         }
     }
@@ -37,7 +39,8 @@ export class KeuzeModuleService {
             this.logger.log(`Keuze module opgehaald: ${keuzeModule.id}`, {id: keuzeModule.id, name: keuzeModule.name, code: keuzeModule.description, credits: keuzeModule.studycredit, location: keuzeModule.location, shortdescription: keuzeModule.shortdescription});
             return keuzeModuleDto;
         } catch (error) {
-            if (error instanceof NotFoundException) {
+            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+                this.logger.warn('Fout bij het ophalen van de keuze module.', {error, id});
                 throw error;
             }
             throw new InternalServerErrorException("Er is een fout opgetreden??");
@@ -60,9 +63,11 @@ export class KeuzeModuleService {
             const keuzeModulesDto = KeuzeModuleMapper.toDTOArray(keuzeModules);
             return keuzeModulesDto;
         } catch (error) {
-            if (error instanceof NotFoundException) {
+            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+                this.logger.warn('Fout bij het ophalen van keuze modules op basis van attribuut.', {error, name, location, level});
                 throw error;
             }
+            this.logger.error('Fout bij het ophalen van keuze modules op basis van attribuut.', {error, name, location, level});
     }       throw new InternalServerErrorException("Er is een fout opgetreden??");
         }
 }

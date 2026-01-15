@@ -1,5 +1,6 @@
 import {IsEmail, IsString, MinLength, MaxLength, IsDateString, IsNotEmpty, Matches} from "class-validator";
-
+import { Transform } from 'class-transformer';
+import { sanitizeInput } from 'src/utils/utils';
 
 export class CreateStudentDto {
     @IsEmail({},{ message: 'Ongeldig e-mailadres' })
@@ -17,11 +18,13 @@ export class CreateStudentDto {
     @IsNotEmpty({ message: 'Achternaam is verplicht' })
     @MinLength(2)
     @MaxLength(30)
+    @Transform(({ value }) => sanitizeInput(value))
     surname: string;
 
     @IsString()
     @IsNotEmpty({ message: 'Voornaam is verplicht' })
     @MinLength(2)
+    @Transform(({ value }) => sanitizeInput(value))
     name: string;
 
     @IsDateString( {}, { message: 'Ongeldige datum' })
