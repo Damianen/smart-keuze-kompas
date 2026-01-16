@@ -28,8 +28,10 @@ export class SavedRecommendationsComponent implements OnInit {
     this.errorMessage.set('');
 
     this.recommenderService.getSavedRecommendations().subscribe({
-      next: (recommendations) => {
-        this.savedRecommendations.set(recommendations);
+      next: (collections) => {
+        // Flatten all collections into a single array of modules
+        const allModules = collections.flatMap(collection => collection.items);
+        this.savedRecommendations.set(allModules);
         this.isLoading.set(false);
       },
       error: (error) => {

@@ -5,6 +5,6 @@ export class ApiConfig {
   private static readonly environment: 'dev' | 'prod' = 'prod';
 
   public static getApiUrl(): string {
-    return this.environment === 'prod' ? this.PROD_URL : this.DEV_URL;
+    return this.environment === 'dev' ? this.PROD_URL : this.DEV_URL;
   }
 }
