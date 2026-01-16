@@ -15,7 +15,8 @@ export class KeuzeModuleService {
            if(!keuzeModules){
                 throw new NotFoundException("Geen Keuze modules gevonden");
            }
-           const keuzeModuleDto = KeuzeModuleMapper.toDTOArray(keuzeModules);
+            const keuzeModuleDto = KeuzeModuleMapper.toDTOArray(keuzeModules);
+            this.logger.log(`Alle keuze modules opgehaald. Aantal: ${keuzeModuleDto.length}`, {count: keuzeModuleDto.length});
            return keuzeModuleDto;
         } catch (error) {
             if (error instanceof NotFoundException) {
@@ -28,6 +29,7 @@ export class KeuzeModuleService {
     }
     async getOne(id: string): Promise<KeuzeModuleDto | null> {
         if (!id) {
+            this.logger.warn('Fout bij het ophalen van keuze module.', {id});
             throw new BadRequestException("Ongeldig ID");
         }
         try{
@@ -39,10 +41,11 @@ export class KeuzeModuleService {
             this.logger.log(`Keuze module opgehaald: ${keuzeModule.id}`, {id: keuzeModule.id, name: keuzeModule.name, code: keuzeModule.description, credits: keuzeModule.studycredit, location: keuzeModule.location, shortdescription: keuzeModule.shortdescription});
             return keuzeModuleDto;
         } catch (error) {
-            if (error instanceof NotFoundException || error instanceof BadRequestException) {
-                this.logger.warn('Fout bij het ophalen van de keuze module.', {error, id});
+            if (error instanceof NotFoundException) {
+                this.logger.warn('Geen keuze module gevonden.', {error, id});
                 throw error;
             }
+            this.logger.error('Er is een serverfout opgetreden bij het ophalen van keuze module.', {error, id});
             throw new InternalServerErrorException("Er is een fout opgetreden??");
         }
     }
@@ -63,7 +66,11 @@ export class KeuzeModuleService {
             const keuzeModulesDto = KeuzeModuleMapper.toDTOArray(keuzeModules);
             return keuzeModulesDto;
         } catch (error) {
-            if (error instanceof NotFoundException || error instanceof BadRequestException) {
+            if (error instanceof NotFoundException) {
+                this.logger.warn('Geen keuze modules gevonden met het opgegeven attribuut.', {error, name, location, level});
+                throw error;
+            }
+            if (error instanceof BadRequestException) {
                 this.logger.warn('Fout bij het ophalen van keuze modules op basis van attribuut.', {error, name, location, level});
                 throw error;
             }
