@@ -77,6 +77,8 @@ jobs:
   push-to-release:
     needs: [test-backend, test-frontend, sast-analysis]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout code
