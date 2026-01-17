@@ -48,6 +48,9 @@ jobs:
           start: npm start
           wait-on: 'http://localhost:4200'
           wait-on-timeout: 120
+        env:
+          CYPRESS_TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
+          CYPRESS_TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
   sast-analysis:
     runs-on: ubuntu-latest
