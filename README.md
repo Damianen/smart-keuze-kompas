@@ -2,7 +2,7 @@
 
 ## Overzicht
 
-Smart Keuze Kompas is een intelligente applicatie die studenten helpt bij het kiezen van de juiste keuzemodule. Door middel van AI en machine learning genereert de applicatie gepersonaliseerde module-aanbevelingen op basis van de interesses, voorkeuren en input van de student.
+Smart Keuze Kompas is een intelligente applicatie die studenten helpt bij het kiezen van de juiste keuzemodule. Door middel van AI genereert de applicatie gepersonaliseerde module-aanbevelingen op basis van de interesses, voorkeuren en input van de student.
 
 ## Architectuur
 
