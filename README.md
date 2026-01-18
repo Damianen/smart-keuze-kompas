@@ -8,13 +8,13 @@ Smart Keuze Kompas is een intelligente applicatie die studenten helpt bij het ki
 
 Het project bestaat uit drie hoofdcomponenten:
 
-### 1. **FastAPI** (Python - Machine Learning API)
+### 1. **FastAPI** (Python API)
 De FastAPI backend biedt een AI-aangedreven aanbevelingssysteem dat op basis van studentinput relevante keuzemodules voorstelt.
 
 **Belangrijkste technologieën:**
 - FastAPI 0.104.1
 - Uvicorn (ASGI server)
-- Scikit-learn (Machine Learning)
+- Scikit-learn
 - Pandas & NumPy (Data processing)
 - Pydantic (Data validatie)
 
@@ -45,7 +45,7 @@ De Angular webapp is de gebruikersinterface van de applicatie met moderne UI/UX.
 - Python 3.x
 - npm 11.6.4 of hoger
 
-### 1. FastAPI (Machine Learning API)
+### 1. FastAPI (API)
 
 ```bash
 # Navigeer naar de FastAPI directory
