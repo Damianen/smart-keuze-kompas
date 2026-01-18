@@ -45,7 +45,7 @@ De Angular webapp is de gebruikersinterface van de applicatie met moderne UI/UX.
 - Python 3.x
 - npm 11.6.4 of hoger
 
-### 1. FastAPI (API)
+### 1. FastAPI (Python API)
 
 ```bash
 # Navigeer naar de FastAPI directory
