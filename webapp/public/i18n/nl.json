@@ -76,7 +76,13 @@
     "LOADING": "Bezig met registreren...",
     "HAS_ACCOUNT": "Al een account?",
     "LOGIN": "Log in",
-    "REQUIRED": "(verplicht)"
+    "REQUIRED": "(verplicht)",
+    "ERROR_REQUIRED_FIELDS": "Vul alle verplichte velden in",
+    "ERROR_PASSWORD_MISMATCH": "Wachtwoorden komen niet overeen",
+    "ERROR_PASSWORD_TOO_SHORT": "Wachtwoord moet minimaal 8 tekens bevatten",
+    "SUCCESS": "Account succesvol aangemaakt! Je wordt doorgestuurd...",
+    "ERROR_FAILED": "Registratie mislukt",
+    "ERROR_GENERIC": "Er is een fout opgetreden bij de registratie"
   },
   "MODULES": {
     "TITLE": "Keuzemodules",

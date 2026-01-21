@@ -76,7 +76,13 @@
     "LOADING": "Registering...",
     "HAS_ACCOUNT": "Already have an account?",
     "LOGIN": "Log in",
-    "REQUIRED": "(required)"
+    "REQUIRED": "(required)",
+    "ERROR_REQUIRED_FIELDS": "Please fill in all required fields",
+    "ERROR_PASSWORD_MISMATCH": "Passwords do not match",
+    "ERROR_PASSWORD_TOO_SHORT": "Password must be at least 8 characters",
+    "SUCCESS": "Account created successfully! Redirecting...",
+    "ERROR_FAILED": "Registration failed",
+    "ERROR_GENERIC": "An error occurred during registration"
   },
   "MODULES": {
     "TITLE": "Elective Modules",

@@ -39,7 +39,8 @@ describe('Modules filters (lokale frontend, online backend)', () => {
     selectFirstOptionIfAny('#location');
     cy.wait(500);
 
-    cy.contains('Wis filters').click();
+    // Click clear filters button (NL: "Wis filters", EN: "Clear filters")
+    cy.contains(/Wis filters|Clear filters/).click();
     cy.wait(500);
 
     cy.get('#search').should('have.value', '');

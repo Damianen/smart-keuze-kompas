@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -23,7 +23,8 @@ export class RegisterComponent {
 
   constructor(
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private translate: TranslateService
   ) {}
 
   onSubmit(): void {
@@ -31,17 +32,17 @@ export class RegisterComponent {
     this.successMessage.set('');
 
     if (!this.name() || !this.surname() || !this.email() || !this.birthDate() || !this.password()) {
-      this.errorMessage.set('Vul alle verplichte velden in');
+      this.errorMessage.set(this.translate.instant('REGISTER.ERROR_REQUIRED_FIELDS'));
       return;
     }
 
     if (this.password() !== this.confirmPassword()) {
-      this.errorMessage.set('Wachtwoorden komen niet overeen');
+      this.errorMessage.set(this.translate.instant('REGISTER.ERROR_PASSWORD_MISMATCH'));
       return;
     }
 
     if (this.password().length < 8) {
-      this.errorMessage.set('Wachtwoord moet minimaal 8 tekens bevatten');
+      this.errorMessage.set(this.translate.instant('REGISTER.ERROR_PASSWORD_TOO_SHORT'));
       return;
     }
 
@@ -57,17 +58,17 @@ export class RegisterComponent {
       next: (response) => {
         this.isLoading.set(false);
         if (response.success) {
-          this.successMessage.set('Account succesvol aangemaakt! Je wordt doorgestuurd...');
+          this.successMessage.set(this.translate.instant('REGISTER.SUCCESS'));
           setTimeout(() => {
             this.router.navigate(['/login']);
           }, 2000);
         } else {
-          this.errorMessage.set(response.message || 'Registratie mislukt');
+          this.errorMessage.set(response.message || this.translate.instant('REGISTER.ERROR_FAILED'));
         }
       },
       error: (error) => {
         this.isLoading.set(false);
-        this.errorMessage.set(error.errorMessage || 'Er is een fout opgetreden bij de registratie');
+        this.errorMessage.set(error.errorMessage || this.translate.instant('REGISTER.ERROR_GENERIC'));
       }
     });
   }

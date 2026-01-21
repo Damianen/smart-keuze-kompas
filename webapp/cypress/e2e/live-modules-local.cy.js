@@ -5,16 +5,6 @@ const testUser = {
   password: Cypress.env('TEST_USER_PASSWORD'),
 };
 
-const selectFirstOptionIfAny = (selector) => {
-  cy.get(selector).then(($select) => {
-    const opts = $select.find('option');
-    const firstValue = opts.length > 1 ? opts.eq(1).val() : null;
-    if (firstValue) {
-      cy.wrap($select).select(firstValue, { force: true });
-    }
-  });
-};
-
 describe('Modules (lokale frontend, online backend)', () => {
   it('toont alle modules', () => {
     cy.intercept('POST', '**/api/auth/login').as('login');
@@ -30,7 +20,8 @@ describe('Modules (lokale frontend, online backend)', () => {
 
     cy.wait('@getAllModules', { timeout: 60000 });
 
-    cy.contains('Keuzemodules').should('be.visible');
+    // Check for modules page title (NL: "Keuzemodules", EN: "Elective Modules")
+    cy.contains(/Keuzemodules|Elective Modules/).should('be.visible');
     cy.get('article').should('have.length.at.least', 1);
   });
 });

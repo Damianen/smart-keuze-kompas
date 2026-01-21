@@ -21,8 +21,12 @@ describe('Logout Flow - Live Backend', () => {
   });
 
   it('should successfully logout', () => {
-    cy.contains('Hi,').should('be.visible');
-    cy.contains('Uitloggen').click();
+    // Wait for navigation to be fully loaded with translations
+    cy.get('nav').should('be.visible');
+    // Look for the user greeting (works for both NL "Hi" and EN "Hi")
+    cy.contains(/Hi,?\s/).should('be.visible');
+    // Click logout button (NL: "Uitloggen", EN: "Logout")
+    cy.get('button').contains(/Uitloggen|Logout/).click();
 
     cy.wait('@logout', { timeout: 60000 });
     cy.wait(1000);
@@ -31,7 +35,8 @@ describe('Logout Flow - Live Backend', () => {
   });
 
   it('should not access protected routes after logout', () => {
-    cy.contains('Uitloggen').click();
+    // Click logout button (NL: "Uitloggen", EN: "Logout")
+    cy.get('button').contains(/Uitloggen|Logout/).click();
     cy.wait('@logout', { timeout: 60000 });
     cy.wait(1000);
 
