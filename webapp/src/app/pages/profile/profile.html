@@ -10,7 +10,7 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
     <!-- Error Message -->
     @if (errorMessage()) {
-      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6" role="alert" aria-live="polite">
         <p class="text-sm">{{ errorMessage() }}</p>
       </div>
     }
@@ -56,16 +56,17 @@
                   type="button"
                   (click)="deleteCollection(collection._id, $event)"
                   [disabled]="deletingCollectionId() === collection._id"
-                  class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  aria-label="Verwijder deze collectie"
+                  class="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                 >
                   @if (deletingCollectionId() === collection._id) {
-                    <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                    Verwijderen...
+                    <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-white" aria-hidden="true"></div>
+                    <span>Verwijderen...</span>
                   } @else {
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                     </svg>
-                    Verwijder collectie
+                    <span>Verwijder collectie</span>
                   }
                 </button>
               </div>
@@ -74,19 +75,20 @@
             <!-- Modules in Collection -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
               @for (module of collection.items; track module.id) {
-                <article class="bg-gray-50 rounded-xl border-2 border-gray-200 hover:border-red-500 transition-all duration-300 overflow-hidden group relative">
+                <article class="bg-gray-50 rounded-xl border-2 border-gray-200 hover:border-red-500 transition-all duration-300 overflow-hidden group relative" [attr.aria-label]="'Module: ' + module.name">
                   <!-- Delete Button (Top Right) -->
                   <button
                     type="button"
                     (click)="removeModule(collection._id, module.id, $event)"
                     [disabled]="deletingModuleId() === module.id"
-                    class="absolute top-3 right-3 z-10 p-2 bg-white rounded-lg shadow-md hover:bg-red-50 transition-colors border border-gray-200 hover:border-red-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                    title="Verwijder module"
+                    class="absolute top-3 right-3 z-10 p-2 bg-white rounded-lg shadow-md hover:bg-red-50 transition-colors border border-gray-200 hover:border-red-500 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-red-500"
+                    [attr.aria-label]="'Verwijder module ' + module.name"
                   >
                     @if (deletingModuleId() === module.id) {
-                      <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-red-600"></div>
+                      <div class="inline-block animate-spin rounded-full h-4 w-4 border-b-2 border-red-600" aria-hidden="true"></div>
+                      <span class="sr-only">Bezig met verwijderen...</span>
                     } @else {
-                      <svg class="w-4 h-4 text-gray-600 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 text-gray-600 group-hover:text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                       </svg>
                     }
@@ -94,8 +96,13 @@
 
                   <!-- Module Card (Clickable) -->
                   <div
-                    class="cursor-pointer p-6"
+                    class="cursor-pointer p-6 focus-within:ring-2 focus-within:ring-red-500"
                     (click)="viewModuleDetail(module.id)"
+                    (keydown.enter)="viewModuleDetail(module.id)"
+                    (keydown.space)="viewModuleDetail(module.id)"
+                    tabindex="0"
+                    role="button"
+                    [attr.aria-label]="'Bekijk details van ' + module.name"
                   >
                     <!-- Card Header -->
                     <div class="flex items-start justify-between mb-3 pr-8">
@@ -105,7 +112,7 @@
                       @if (module.hybrid_score) {
                         <div class="text-right">
                           <div class="text-sm font-semibold text-green-600">
-                            {{ (module.hybrid_score * 100).toFixed(0) }}% match
+                            <span class="sr-only">Match score: </span>{{ (module.hybrid_score * 100).toFixed(0) }}% match
                           </div>
                         </div>
                       }
@@ -117,11 +124,11 @@
 
                     <!-- Location -->
                     <div class="flex items-center text-sm text-gray-500 mb-3">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                       </svg>
-                      {{ module.location }}
+                      <span class="sr-only">Locatie: </span>{{ module.location }}
                     </div>
 
                     <!-- Reason -->
@@ -151,12 +158,12 @@
 
                     <!-- View Details Link -->
                     <div class="pt-4 border-t border-gray-200">
-                      <div class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center transition-colors">
+                      <span class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center transition-colors" aria-hidden="true">
                         Bekijk details
-                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                      </div>
+                      </span>
                     </div>
                   </div>
                 </article>
@@ -169,8 +176,8 @@
 
     <!-- Empty State -->
     @if (!isLoading() && savedCollections().length === 0) {
-      <div class="bg-white rounded-xl shadow-md p-12 text-center">
-        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div class="bg-white rounded-xl shadow-md p-12 text-center" role="status">
+        <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z"></path>
         </svg>
         <h3 class="text-lg font-medium text-gray-900 mb-2">Nog geen opgeslagen modules</h3>
@@ -180,10 +187,10 @@
         <button
           type="button"
           (click)="browseModules()"
-          class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors"
+          class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         >
           Ontdek Modules
-          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
           </svg>
         </button>

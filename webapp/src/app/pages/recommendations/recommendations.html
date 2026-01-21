@@ -10,14 +10,14 @@
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Error Message -->
     @if (errorMessage()) {
-      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6">
+      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6" role="alert" aria-live="polite">
         <p class="text-sm">{{ errorMessage() }}</p>
       </div>
     }
 
     <!-- Success Message -->
     @if (successMessage()) {
-      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6">
+      <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6" role="status" aria-live="polite">
         <p class="text-sm">{{ successMessage() }}</p>
       </div>
     }
@@ -50,14 +50,14 @@
       >
         @if (isLoading()) {
           <span class="flex items-center justify-center">
-            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+            <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
               <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
               <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
             </svg>
-            Aanbevelingen genereren...
+            <span>Aanbevelingen genereren...</span>
           </span>
         } @else {
-          Krijg aanbevelingen
+          <span>Krijg aanbevelingen</span>
         }
       </button>
     </div>
@@ -101,11 +101,11 @@
                       </span>
                     </div>
                     <p class="text-sm text-gray-500 flex items-center">
-                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                       </svg>
-                      {{ recommendation.location }}
+                      <span class="sr-only">Locatie: </span>{{ recommendation.location }}
                     </p>
                   </div>
 
@@ -114,14 +114,16 @@
                     <button
                       type="button"
                       (click)="toggleSelection(recommendation.id)"
-                      class="flex items-center justify-center w-8 h-8 rounded-lg border-2 transition-colors"
+                      [attr.aria-pressed]="isSelected(recommendation.id)"
+                      [attr.aria-label]="isSelected(recommendation.id) ? 'Deselecteer ' + recommendation.name : 'Selecteer ' + recommendation.name"
+                      class="flex items-center justify-center w-8 h-8 rounded-lg border-2 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                       [class.border-red-500]="isSelected(recommendation.id)"
                       [class.bg-red-500]="isSelected(recommendation.id)"
                       [class.border-gray-300]="!isSelected(recommendation.id)"
                       [class.hover:border-red-500]="!isSelected(recommendation.id)"
                     >
                       @if (isSelected(recommendation.id)) {
-                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                           <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                         </svg>
                       }
@@ -136,35 +138,38 @@
                 </div>
 
                 <!-- Scores Grid -->
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" role="group" aria-label="Module scores">
                   <!-- Hybrid Score -->
                   <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">Match Score</p>
-                    <p class="text-2xl font-bold" [class]="getScoreColor(recommendation.hybrid_score)">
+                    <p class="text-xs text-gray-600 mb-1" id="match-score-label-{{recommendation.id}}">Match Score</p>
+                    <p class="text-2xl font-bold" [class]="getScoreColor(recommendation.hybrid_score)" [attr.aria-labelledby]="'match-score-label-' + recommendation.id">
                       {{ (recommendation.hybrid_score * 100).toFixed(0) }}%
+                      <span class="sr-only">
+                        ({{ recommendation.hybrid_score >= 0.7 ? 'Hoog' : recommendation.hybrid_score >= 0.4 ? 'Gemiddeld' : 'Laag' }})
+                      </span>
                     </p>
                   </div>
 
                   <!-- Content Score -->
                   <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">Inhoud Match</p>
-                    <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.content_score)">
+                    <p class="text-xs text-gray-600 mb-1" id="content-score-label-{{recommendation.id}}">Inhoud Match</p>
+                    <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.content_score)" [attr.aria-labelledby]="'content-score-label-' + recommendation.id">
                       {{ getScoreLabel(recommendation.content_score) }}
                     </p>
                   </div>
 
                   <!-- Popularity Score -->
                   <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">Populariteit</p>
-                    <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.popularity_score)">
+                    <p class="text-xs text-gray-600 mb-1" id="popularity-score-label-{{recommendation.id}}">Populariteit</p>
+                    <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.popularity_score)" [attr.aria-labelledby]="'popularity-score-label-' + recommendation.id">
                       {{ getScoreLabel(recommendation.popularity_score) }}
                     </p>
                   </div>
 
                   <!-- Difficulty -->
                   <div class="bg-gray-50 rounded-lg p-3">
-                    <p class="text-xs text-gray-600 mb-1">Moeilijkheid</p>
-                    <p class="text-lg font-semibold" [class]="getDifficultyColor(recommendation.estimated_difficulty)">
+                    <p class="text-xs text-gray-600 mb-1" id="difficulty-label-{{recommendation.id}}">Moeilijkheid</p>
+                    <p class="text-lg font-semibold" [class]="getDifficultyColor(recommendation.estimated_difficulty)" [attr.aria-labelledby]="'difficulty-label-' + recommendation.id">
                       {{ getDifficultyLabel(recommendation.estimated_difficulty) }}
                     </p>
                   </div>
@@ -175,10 +180,11 @@
                   <button
                     type="button"
                     (click)="viewModuleDetail(recommendation.id)"
-                    class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center transition-colors"
+                    class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
+                    [attr.aria-label]="'Bekijk volledige details van ' + recommendation.name"
                   >
                     Bekijk volledige details
-                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                   </button>
@@ -189,8 +195,8 @@
         </div>
       } @else {
         <!-- No Results -->
-        <div class="bg-white rounded-xl shadow-md p-12 text-center">
-          <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div class="bg-white rounded-xl shadow-md p-12 text-center" role="status">
+          <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
           <h3 class="text-lg font-medium text-gray-900 mb-2">Geen aanbevelingen gevonden</h3>
