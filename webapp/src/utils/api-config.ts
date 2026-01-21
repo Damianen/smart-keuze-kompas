@@ -1,10 +1,15 @@
+import { environment } from '../environments/environment';
+
 export class ApiConfig {
-  private static readonly DEV_URL = 'http://localhost:3000';
-  private static readonly PROD_URL = 'https://smart-keuze-kompas.onrender.com';
-
-  private static readonly environment: 'dev' | 'prod' = 'prod';
-
   public static getApiUrl(): string {
-    return this.environment === 'prod' ? this.PROD_URL : this.DEV_URL;
+    return environment.apiUrl;
+  }
+
+  public static getEnvironmentName(): string {
+    return environment.environmentName;
+  }
+
+  public static isProduction(): boolean {
+    return environment.production;
   }
 }

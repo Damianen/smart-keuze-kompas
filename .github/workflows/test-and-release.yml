@@ -74,8 +74,92 @@ jobs:
         with:
           category: "/language:javascript-typescript"
 
+  sca-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Run npm audit on API
+        working-directory: ./api
+        run: npm audit --audit-level=high
+
+      - name: Run npm audit on Webapp
+        working-directory: ./webapp
+        run: npm audit --audit-level=high
+
+      - name: Run pip-audit on FastAPI
+        working-directory: ./FastAPI
+        run: pip-audit -r requirements.txt
+
+  sbom-generation:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install SBOM tools
+        run: |
+          npm install -g @cyclonedx/cyclonedx-npm
+          pip install cyclonedx-bom
+
+      - name: Install API dependencies
+        working-directory: ./api
+        run: npm ci
+
+      - name: Install Webapp dependencies
+        working-directory: ./webapp
+        run: npm ci
+
+      - name: Generate API SBOM
+        working-directory: ./api
+        run: cyclonedx-npm --output-file ../sbom-api.json
+
+      - name: Generate Webapp SBOM
+        working-directory: ./webapp
+        run: cyclonedx-npm --output-file ../sbom-webapp.json
+
+      - name: Generate FastAPI SBOM
+        working-directory: ./FastAPI
+        run: cyclonedx-py requirements -o ../sbom-fastapi.json --format json requirements.txt
+
+      - name: Upload SBOMs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-reports
+          path: |
+            sbom-api.json
+            sbom-webapp.json
+            sbom-fastapi.json
+          retention-days: 90
+
   push-to-release:
-    needs: [test-backend, test-frontend, sast-analysis]
+    needs: [test-backend, test-frontend, sast-analysis, sca-analysis, sbom-generation]
     runs-on: ubuntu-latest
     permissions:
       contents: write

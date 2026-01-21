@@ -1,0 +1,145 @@
+name: Deploy to Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - prd
+
+  push:
+    branches:
+      - '**'
+
+jobs:
+  determine-environment:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set-env.outputs.environment }}
+    steps:
+      - name: Determine environment from branch or input
+        id: set-env
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "environment=${{ github.event.inputs.environment }}" >> $GITHUB_OUTPUT
+          elif [ "${{ github.ref }}" == "refs/heads/release" ]; then
+            echo "environment=prd" >> $GITHUB_OUTPUT
+          else
+            echo "environment=dev" >> $GITHUB_OUTPUT
+          fi
+
+  deploy-api:
+    needs: determine-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-environment.outputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'api/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./api
+        run: npm ci
+
+      - name: Create .env file from secrets
+        working-directory: ./api
+        run: |
+          cat << EOF > .env
+          DB_NAME=${{ secrets.DB_NAME }}
+          STRING_CONNECTION=${{ secrets.STRING_CONNECTION }}
+          PRODUCTION=${{ vars.PRODUCTION }}
+          API_KEY=${{ secrets.API_KEY }}
+          API_KEY_NAME=${{ vars.API_KEY_NAME }}
+          FAST_API_URL=${{ vars.FAST_API_URL }}
+          JWT_SECRET=${{ secrets.JWT_SECRET }}
+          SEQ_API_KEY=${{ secrets.SEQ_API_KEY }}
+          SEQ_Base_URL=${{ vars.SEQ_BASE_URL }}
+          THROTTLE_TTL=${{ vars.THROTTLE_TTL }}
+          THROTTLE_LIMIT=${{ vars.THROTTLE_LIMIT }}
+          PORT=${{ vars.PORT }}
+          EOF
+
+      - name: Build API
+        working-directory: ./api
+        run: npm run build
+
+      - name: Deploy API to ${{ needs.determine-environment.outputs.environment }}
+        run: |
+          echo "Deploying API to ${{ needs.determine-environment.outputs.environment }} environment"
+          # Add your deployment command here, e.g.:
+          # - Render: Use render deploy hook
+          # - AWS: aws ecs update-service
+          # - Azure: az webapp deploy
+          # - Heroku: git push heroku main
+
+  deploy-webapp:
+    needs: determine-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-environment.outputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: 'webapp/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: ./webapp
+        run: npm ci
+
+      - name: Build Webapp for ${{ needs.determine-environment.outputs.environment }}
+        working-directory: ./webapp
+        run: npm run build -- --configuration=${{ needs.determine-environment.outputs.environment }}
+
+      - name: Deploy Webapp to ${{ needs.determine-environment.outputs.environment }}
+        run: |
+          echo "Deploying Webapp to ${{ needs.determine-environment.outputs.environment }} environment"
+          # Add your deployment command here
+
+  deploy-fastapi:
+    needs: determine-environment
+    runs-on: ubuntu-latest
+    environment: ${{ needs.determine-environment.outputs.environment }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        working-directory: ./FastAPI
+        run: pip install -r requirements.txt
+
+      - name: Create .env file from secrets
+        working-directory: ./FastAPI
+        run: |
+          cat << EOF > .env
+          API_TOKEN=${{ secrets.FASTAPI_TOKEN }}
+          PORT=${{ vars.FASTAPI_PORT }}
+          EOF
+
+      - name: Deploy FastAPI to ${{ needs.determine-environment.outputs.environment }}
+        run: |
+          echo "Deploying FastAPI to ${{ needs.determine-environment.outputs.environment }} environment"
+          # Add your deployment command here
