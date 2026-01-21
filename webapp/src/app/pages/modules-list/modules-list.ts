@@ -1,12 +1,13 @@
 import { Component, signal, computed, OnInit, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { KeuzeModule } from '../../../dtos/module.dto';
 import { KeuzemoduleService } from '../../../services/keuzemodule.service';
 
 @Component({
   selector: 'app-modules-list',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: './modules-list.html',
   styleUrl: './modules-list.css'
 })

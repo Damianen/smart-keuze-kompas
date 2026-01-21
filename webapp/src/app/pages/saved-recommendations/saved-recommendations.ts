@@ -1,11 +1,12 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeuzeModuleAI } from '../../../dtos/module.dto';
 import { RecommenderService } from '../../../services/recommender.service';
 
 @Component({
   selector: 'app-saved-recommendations',
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: './saved-recommendations.html',
   styleUrl: './saved-recommendations.css'
 })
@@ -16,7 +17,8 @@ export class SavedRecommendationsComponent implements OnInit {
 
   constructor(
     private recommenderService: RecommenderService,
-    private router: Router
+    private router: Router,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

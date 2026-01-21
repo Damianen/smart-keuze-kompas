@@ -1,12 +1,13 @@
 import { Component, signal, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { KeuzeModule } from '../../../dtos/module.dto';
 import { KeuzemoduleService } from '../../../services/keuzemodule.service';
 import { RecommenderService } from '../../../services/recommender.service';
 
 @Component({
   selector: 'app-module-detail',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './module-detail.html',
   styleUrl: './module-detail.css',
 })

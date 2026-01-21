@@ -1,3 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import "tailwindcss";
+
+/* Enable class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Smooth transition for theme changes */
+html {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode scrollbar styling */
+.dark {
+  color-scheme: dark;
+}
+
+/* Custom dark mode background for body */
+.dark body {
+  background-color: #111827;
+}

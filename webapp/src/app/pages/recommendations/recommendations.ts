@@ -1,12 +1,13 @@
 import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { KeuzeModuleAI, SaveRecommendation } from '../../../dtos/module.dto';
 import { RecommenderService } from '../../../services/recommender.service';
 
 @Component({
   selector: 'app-recommendations',
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: './recommendations.html',
   styleUrl: './recommendations.css',
 })
@@ -22,6 +23,7 @@ export class RecommendationsComponent {
   constructor(
     private recommenderService: RecommenderService,
     private router: Router,
+    private translate: TranslateService,
   ) {}
 
   protected getRecommendations(): void {

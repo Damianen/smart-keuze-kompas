@@ -1,15 +1,15 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
   @if (loading()) {
     <!-- Loading State -->
     <div class="flex items-center justify-center min-h-screen">
       <div class="text-center">
         <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-red-600"></div>
-        <p class="mt-4 text-gray-600">Module laden...</p>
+        <p class="mt-4 text-gray-600 dark:text-gray-400">{{ 'MODULE_DETAIL.LOADING' | translate }}</p>
       </div>
     </div>
   } @else if (module()) {
     <!-- Module Content -->
-    <div>
+    <div class="transition-colors">
       <!-- Header -->
       <div class="bg-gradient-to-br from-red-600 via-red-700 to-red-800 text-white">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -22,7 +22,7 @@
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
-              Terug naar overzicht
+              {{ 'MODULE_DETAIL.BACK' | translate }}
             </a>
           </div>
 
@@ -40,7 +40,7 @@
             </div>
             <div class="ml-8 text-right">
               <div class="text-5xl font-bold mb-2">{{ module()!.studycredit }}</div>
-              <div class="text-red-100">EC</div>
+              <div class="text-red-100">{{ 'MODULE_DETAIL.EC' | translate }}</div>
             </div>
           </div>
         </div>
@@ -52,18 +52,18 @@
           <!-- Main Content -->
           <div class="lg:col-span-2 space-y-8">
             <!-- Description -->
-            <section class="bg-white rounded-xl shadow-md p-6">
-              <h2 class="text-2xl font-bold text-gray-900 mb-4">Over deze module</h2>
-              <p class="text-gray-700 leading-relaxed whitespace-pre-line">
+            <section class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-colors">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ 'MODULE_DETAIL.ABOUT' | translate }}</h2>
+              <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                 {{ module()!.description }}
               </p>
             </section>
 
             <!-- Content -->
             @if (module()!.content) {
-              <section class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Inhoud</h2>
-                <p class="text-gray-700 leading-relaxed whitespace-pre-line">
+              <section class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-colors">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ 'MODULE_DETAIL.CONTENT' | translate }}</h2>
+                <p class="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
                   {{ module()!.content }}
                 </p>
               </section>
@@ -71,16 +71,16 @@
 
             <!-- Learning Outcomes -->
             @if (getLearningGoals().length > 0) {
-              <section class="bg-white rounded-xl shadow-md p-6">
-                <h2 class="text-2xl font-bold text-gray-900 mb-4">Leerdoelen</h2>
-                <p class="text-gray-600 mb-4">Na het voltooien van deze module kun je:</p>
+              <section class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-colors">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">{{ 'MODULE_DETAIL.LEARNING_GOALS' | translate }}</h2>
+                <p class="text-gray-600 dark:text-gray-400 mb-4">{{ 'MODULE_DETAIL.LEARNING_GOALS_DESC' | translate }}</p>
                 <ul class="space-y-3">
                   @for (goal of getLearningGoals(); track goal) {
                     <li class="flex items-start">
-                      <svg class="w-6 h-6 text-green-500 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <svg class="w-6 h-6 text-green-500 dark:text-green-400 mr-3 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                       </svg>
-                      <span class="text-gray-700">{{ goal }}</span>
+                      <span class="text-gray-700 dark:text-gray-300">{{ goal }}</span>
                     </li>
                   }
                 </ul>
@@ -92,8 +92,8 @@
           <div class="lg:col-span-1">
             <div class="sticky top-24 space-y-6">
               <!-- Enroll Card -->
-              <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Opslaan</h3>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-colors">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">{{ 'MODULE_DETAIL.SAVE' | translate }}</h3>
                 <button
                   type="button"
                   (click)="enrollInModule()"
@@ -108,66 +108,68 @@
                 >
                   @if (saving()) {
                     <div class="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-white" aria-hidden="true"></div>
-                    <span>Opslaan...</span>
+                    <span>{{ 'MODULE_DETAIL.SAVING' | translate }}</span>
                   } @else if (saveSuccess()) {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>Opgeslagen!</span>
+                    <span>{{ 'MODULE_DETAIL.SAVED' | translate }}</span>
                   } @else {
-                    <span>Opslaan</span>
+                    <span>{{ 'MODULE_DETAIL.SAVE' | translate }}</span>
                   }
                 </button>
                 @if (saveError()) {
-                  <div class="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg" role="alert" aria-live="polite">
-                    <p class="text-sm text-red-600 text-center">{{ saveError() }}</p>
+                  <div class="mb-4 p-3 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-gray-700 rounded-lg" role="alert" aria-live="polite">
+                    <p class="text-sm text-red-600 dark:text-red-500 text-center">{{ saveError() }}</p>
                   </div>
                 }
-                <p class="text-sm text-gray-500 text-center">
-                  Opgeslagen modules vind je terug in je profiel
+                <p class="text-sm text-gray-500 dark:text-gray-400 text-center">
+                  {{ 'MODULE_DETAIL.SAVE_INFO' | translate }}
                 </p>
               </div>
 
               <!-- Module Info -->
-              <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Module informatie</h3>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-colors">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">{{ 'MODULE_DETAIL.MODULE_INFO' | translate }}</h3>
                 <div class="space-y-4">
                   <div>
-                    <div class="text-sm text-gray-500 mb-1">Locatie</div>
-                    <div class="font-medium text-gray-900">{{ module()!.location }}</div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">{{ 'MODULE_DETAIL.LOCATION' | translate }}</div>
+                    <div class="font-medium text-gray-900 dark:text-white">{{ module()!.location }}</div>
                   </div>
-                  <div class="border-t border-gray-200 pt-4">
-                    <div class="text-sm text-gray-500 mb-1">Niveau</div>
-                    <div class="font-medium text-gray-900">{{ module()!.level }}</div>
+                  <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">{{ 'MODULE_DETAIL.LEVEL' | translate }}</div>
+                    <div class="font-medium text-gray-900 dark:text-white">{{ module()!.level }}</div>
                   </div>
-                  <div class="border-t border-gray-200 pt-4">
-                    <div class="text-sm text-gray-500 mb-1">Studiepunten</div>
-                    <div class="font-medium text-gray-900">{{ module()!.studycredit }} EC</div>
+                  <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mb-1">{{ 'MODULE_DETAIL.CREDITS' | translate }}</div>
+                    <div class="font-medium text-gray-900 dark:text-white">{{ module()!.studycredit }} {{ 'MODULE_DETAIL.EC' | translate }}</div>
                   </div>
                 </div>
               </div>
 
               <!-- Share -->
-              <div class="bg-white rounded-xl shadow-md p-6">
-                <h3 class="text-lg font-bold text-gray-900 mb-4">Delen</h3>
+              <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 transition-colors">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">{{ 'MODULE_DETAIL.SHARE' | translate }}</h3>
                 <button
                   type="button"
                   (click)="copyLink()"
                   [class.bg-green-50]="linkCopied()"
+                  [class.dark:bg-green-900/30]="linkCopied()"
                   [class.border-green-500]="linkCopied()"
                   [class.text-green-700]="linkCopied()"
-                  class="w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium flex items-center justify-center gap-2"
+                  [class.dark:text-green-300]="linkCopied()"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors text-sm font-medium flex items-center justify-center gap-2 dark:text-gray-300"
                 >
                   @if (linkCopied()) {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
                     </svg>
-                    <span>Link gekopieerd!</span>
+                    <span>{{ 'MODULE_DETAIL.LINK_COPIED' | translate }}</span>
                   } @else {
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                     </svg>
-                    <span>Link kopiëren</span>
+                    <span>{{ 'MODULE_DETAIL.COPY_LINK' | translate }}</span>
                   }
                 </button>
               </div>
@@ -183,13 +185,13 @@
         <svg class="w-16 h-16 mx-auto text-red-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">{{ errorMessage() }}</h2>
-        <p class="text-gray-600 mb-6">Deze module bestaat niet of kon niet worden geladen.</p>
+        <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">{{ 'MODULE_DETAIL.ERROR_TITLE' | translate }}</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">{{ 'MODULE_DETAIL.ERROR_DESC' | translate }}</p>
         <a
           routerLink="/modules"
           class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-bold rounded-lg hover:bg-red-700 transition-colors"
         >
-          Terug naar overzicht
+          {{ 'MODULE_DETAIL.BACK' | translate }}
         </a>
       </div>
     </div>

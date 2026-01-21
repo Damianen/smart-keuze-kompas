@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-login',
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslateModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })

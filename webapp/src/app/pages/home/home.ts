@@ -1,11 +1,12 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { KeuzemoduleService } from '../../../services/keuzemodule.service';
 import { KeuzeModule } from '../../../dtos/module.dto';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

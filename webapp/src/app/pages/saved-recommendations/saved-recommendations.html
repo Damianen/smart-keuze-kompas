@@ -1,16 +1,16 @@
-<div class="min-h-screen bg-gray-50">
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
   <!-- Page Header -->
-  <div class="bg-white border-b-2 border-red-600 shadow-sm">
+  <div class="bg-white dark:bg-gray-800 border-b-2 border-red-600 shadow-sm transition-colors">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Opgeslagen Aanbevelingen</h1>
-      <p class="text-gray-600">Bekijk je eerder opgeslagen module-aanbevelingen</p>
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ 'SAVED_RECOMMENDATIONS.TITLE' | translate }}</h1>
+      <p class="text-gray-600 dark:text-gray-400">{{ 'SAVED_RECOMMENDATIONS.SUBTITLE' | translate }}</p>
     </div>
   </div>
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Error Message -->
     @if (errorMessage()) {
-      <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-6" role="alert" aria-live="polite">
+      <div class="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 text-red-800 dark:text-red-300 px-4 py-3 rounded-lg mb-6" role="alert" aria-live="polite">
         <p class="text-sm">{{ errorMessage() }}</p>
       </div>
     }
@@ -20,7 +20,7 @@
       <div class="flex justify-center items-center py-12">
         <div class="flex flex-col items-center">
           <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-red-600 mb-4"></div>
-          <p class="text-sm text-gray-600">Aanbevelingen laden...</p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">{{ 'SAVED_RECOMMENDATIONS.LOADING' | translate }}</p>
         </div>
       </div>
     }
@@ -29,77 +29,77 @@
     @if (!isLoading() && savedRecommendations().length > 0) {
       <div class="space-y-6">
         @for (recommendation of savedRecommendations(); track recommendation.id) {
-          <article class="bg-white rounded-xl shadow-md overflow-hidden border-2 border-gray-100 hover:border-red-500 transition-all duration-300">
+          <article class="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden border-2 border-gray-100 dark:border-gray-700 hover:border-red-500 transition-all duration-300">
             <div class="p-6">
               <!-- Header -->
               <div class="flex items-start justify-between mb-4">
                 <div class="flex-1">
                   <div class="flex items-center gap-3 mb-2">
-                    <h3 class="text-xl font-bold text-gray-900">{{ recommendation.name }}</h3>
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ recommendation.name }}</h3>
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-300">
                       {{ recommendation.level }}
                     </span>
                   </div>
-                  <p class="text-sm text-gray-500 flex items-center">
+                  <p class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                     </svg>
-                    <span class="sr-only">Locatie: </span>{{ recommendation.location }}
+                    <span class="sr-only">{{ 'COMMON.LOCATION' | translate }}: </span>{{ recommendation.location }}
                   </p>
                 </div>
 
                 <!-- Saved Badge -->
                 <div class="ml-4">
-                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                  <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300">
                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fill-rule="evenodd" d="M5 2a1 1 0 011 1v1h1a1 1 0 010 2H6v1a1 1 0 01-2 0V6H3a1 1 0 010-2h1V3a1 1 0 011-1zm0 10a1 1 0 011 1v1h1a1 1 0 110 2H6v1a1 1 0 11-2 0v-1H3a1 1 0 110-2h1v-1a1 1 0 011-1zM12 2a1 1 0 01.967.744L14.146 7.2 17.5 9.134a1 1 0 010 1.732l-3.354 1.935-1.18 4.455a1 1 0 01-1.933 0L9.854 12.8 6.5 10.866a1 1 0 010-1.732l3.354-1.935 1.18-4.455A1 1 0 0112 2z" clip-rule="evenodd"></path>
                     </svg>
-                    Opgeslagen
+                    {{ 'SAVED_RECOMMENDATIONS.SAVED' | translate }}
                   </span>
                 </div>
               </div>
 
               <!-- AI Reasoning -->
-              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
-                <p class="text-sm font-medium text-blue-900 mb-1">Waarom deze module?</p>
-                <p class="text-sm text-blue-800">{{ recommendation.reason_text }}</p>
+              <div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-4">
+                <p class="text-sm font-medium text-blue-900 dark:text-blue-200 mb-1">{{ 'RECOMMENDATIONS.WHY_THIS' | translate }}</p>
+                <p class="text-sm text-blue-800 dark:text-blue-300">{{ recommendation.reason_text }}</p>
               </div>
 
               <!-- Scores Grid -->
-              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" role="group" aria-label="Module scores">
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4" role="group" [attr.aria-label]="'RECOMMENDATIONS.MATCH_SCORE' | translate">
                 <!-- Hybrid Score -->
-                <div class="bg-gray-50 rounded-lg p-3">
-                  <p class="text-xs text-gray-600 mb-1" id="saved-match-score-{{recommendation.id}}">Match Score</p>
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 transition-colors">
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mb-1" id="saved-match-score-{{recommendation.id}}">{{ 'RECOMMENDATIONS.MATCH_SCORE' | translate }}</p>
                   <p class="text-2xl font-bold" [class]="getScoreColor(recommendation.hybrid_score)" [attr.aria-labelledby]="'saved-match-score-' + recommendation.id">
                     {{ (recommendation.hybrid_score * 100).toFixed(0) }}%
                     <span class="sr-only">
-                      ({{ recommendation.hybrid_score >= 0.7 ? 'Hoog' : recommendation.hybrid_score >= 0.4 ? 'Gemiddeld' : 'Laag' }})
+                      ({{ recommendation.hybrid_score >= 0.7 ? ('RECOMMENDATIONS.HIGH' | translate) : recommendation.hybrid_score >= 0.4 ? ('RECOMMENDATIONS.MEDIUM' | translate) : ('RECOMMENDATIONS.LOW' | translate) }})
                     </span>
                   </p>
                 </div>
 
                 <!-- Content Score -->
-                <div class="bg-gray-50 rounded-lg p-3">
-                  <p class="text-xs text-gray-600 mb-1" id="saved-content-score-{{recommendation.id}}">Inhoud Match</p>
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 transition-colors">
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mb-1" id="saved-content-score-{{recommendation.id}}">{{ 'RECOMMENDATIONS.CONTENT_MATCH' | translate }}</p>
                   <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.content_score)" [attr.aria-labelledby]="'saved-content-score-' + recommendation.id">
-                    {{ getScoreLabel(recommendation.content_score) }}
+                    {{ recommendation.content_score >= 0.7 ? ('RECOMMENDATIONS.HIGH' | translate) : recommendation.content_score >= 0.4 ? ('RECOMMENDATIONS.MEDIUM' | translate) : ('RECOMMENDATIONS.LOW' | translate) }}
                   </p>
                 </div>
 
                 <!-- Popularity Score -->
-                <div class="bg-gray-50 rounded-lg p-3">
-                  <p class="text-xs text-gray-600 mb-1" id="saved-popularity-score-{{recommendation.id}}">Populariteit</p>
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 transition-colors">
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mb-1" id="saved-popularity-score-{{recommendation.id}}">{{ 'RECOMMENDATIONS.POPULARITY' | translate }}</p>
                   <p class="text-lg font-semibold" [class]="getScoreColor(recommendation.popularity_score)" [attr.aria-labelledby]="'saved-popularity-score-' + recommendation.id">
-                    {{ getScoreLabel(recommendation.popularity_score) }}
+                    {{ recommendation.popularity_score >= 0.7 ? ('RECOMMENDATIONS.HIGH' | translate) : recommendation.popularity_score >= 0.4 ? ('RECOMMENDATIONS.MEDIUM' | translate) : ('RECOMMENDATIONS.LOW' | translate) }}
                   </p>
                 </div>
 
                 <!-- Difficulty -->
-                <div class="bg-gray-50 rounded-lg p-3">
-                  <p class="text-xs text-gray-600 mb-1" id="saved-difficulty-{{recommendation.id}}">Moeilijkheid</p>
+                <div class="bg-gray-50 dark:bg-gray-900 rounded-lg p-3 transition-colors">
+                  <p class="text-xs text-gray-600 dark:text-gray-400 mb-1" id="saved-difficulty-{{recommendation.id}}">{{ 'RECOMMENDATIONS.DIFFICULTY' | translate }}</p>
                   <p class="text-lg font-semibold" [class]="getDifficultyColor(recommendation.estimated_difficulty)" [attr.aria-labelledby]="'saved-difficulty-' + recommendation.id">
-                    {{ getDifficultyLabel(recommendation.estimated_difficulty) }}
+                    {{ recommendation.estimated_difficulty <= 0.3 ? ('RECOMMENDATIONS.EASY' | translate) : recommendation.estimated_difficulty <= 0.6 ? ('RECOMMENDATIONS.MODERATE' | translate) : ('RECOMMENDATIONS.HARD' | translate) }}
                   </p>
                 </div>
               </div>
@@ -110,9 +110,9 @@
                   type="button"
                   (click)="viewModuleDetail(recommendation.id)"
                   class="text-red-600 hover:text-red-700 font-medium text-sm flex items-center transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 rounded"
-                  [attr.aria-label]="'Bekijk volledige details van ' + recommendation.name"
+                  [attr.aria-label]="('RECOMMENDATIONS.VIEW_DETAILS' | translate) + ' ' + recommendation.name"
                 >
-                  Bekijk volledige details
+                  {{ 'RECOMMENDATIONS.VIEW_DETAILS' | translate }}
                   <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                   </svg>
@@ -126,20 +126,20 @@
 
     <!-- Empty State -->
     @if (!isLoading() && savedRecommendations().length === 0) {
-      <div class="bg-white rounded-xl shadow-md p-12 text-center" role="status">
+      <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-12 text-center transition-colors" role="status">
         <svg class="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
         </svg>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">Geen opgeslagen aanbevelingen</h3>
-        <p class="text-gray-500 mb-6">
-          Je hebt nog geen aanbevelingen opgeslagen. Krijg gepersonaliseerde aanbevelingen op basis van je interesses!
+        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-2">{{ 'SAVED_RECOMMENDATIONS.EMPTY_TITLE' | translate }}</h3>
+        <p class="text-gray-500 dark:text-gray-400 mb-6">
+          {{ 'SAVED_RECOMMENDATIONS.EMPTY_DESC' | translate }}
         </p>
         <button
           type="button"
           (click)="getRecommendations()"
           class="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
         >
-          Krijg aanbevelingen
+          {{ 'SAVED_RECOMMENDATIONS.GET_RECOMMENDATIONS' | translate }}
           <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
           </svg>
