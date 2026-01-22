@@ -35,29 +35,27 @@ describe('Module Detail Page - Live Backend', () => {
 
   it('should navigate to module detail page when clicking a module', () => {
     // Should already be on modules page from before() hook
-    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
 
     // Click on the first module's view details button (NL: "Bekijk details", EN: "View details")
-    cy.get('article').first().within(() => {
-      cy.contains(/Bekijk details|View details/).click();
-    });
+    cy.contains(/Bekijk details|View details/).first().click();
 
     // Should be on a module detail page
     cy.url().should('match', /\/modules\/\d+/);
 
     // Go back for next test
     cy.go('back');
-    cy.url().should('include', '/modules');
-    cy.url().should('not.match', /\/modules\/\d+/);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
   });
 
   it('should display module information on detail page', () => {
-    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
 
     // Click on the first module
-    cy.get('article').first().within(() => {
-      cy.contains(/Bekijk details|View details/).click();
-    });
+    cy.contains(/Bekijk details|View details/).first().click();
 
     cy.wait('@getModule', { timeout: 60000 });
 
@@ -66,17 +64,16 @@ describe('Module Detail Page - Live Backend', () => {
 
     // Go back for next test
     cy.go('back');
-    cy.url().should('include', '/modules');
-    cy.url().should('not.match', /\/modules\/\d+/);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
   });
 
   it('should have a back button on detail page', () => {
-    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
 
     // Click on the first module
-    cy.get('article').first().within(() => {
-      cy.contains(/Bekijk details|View details/).click();
-    });
+    cy.contains(/Bekijk details|View details/).first().click();
 
     cy.wait('@getModule', { timeout: 60000 });
 
@@ -85,17 +82,16 @@ describe('Module Detail Page - Live Backend', () => {
 
     // Go back for next test
     cy.go('back');
-    cy.url().should('include', '/modules');
-    cy.url().should('not.match', /\/modules\/\d+/);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
   });
 
   it('should navigate back when clicking back button', () => {
-    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
 
     // Click on the first module
-    cy.get('article').first().within(() => {
-      cy.contains(/Bekijk details|View details/).click();
-    });
+    cy.contains(/Bekijk details|View details/).first().click();
 
     cy.wait('@getModule', { timeout: 60000 });
 
@@ -103,17 +99,16 @@ describe('Module Detail Page - Live Backend', () => {
     cy.contains(/Terug naar overzicht|Back to overview/).click();
 
     // Should be back on modules page
-    cy.url().should('include', '/modules');
-    cy.url().should('not.match', /\/modules\/\d+/);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
   });
 
   it('should display learning goals section', () => {
-    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+    cy.url().should('match', /\/modules$/);
+    cy.contains(/Bekijk details|View details/, { timeout: 60000 }).should('exist');
 
     // Click on the first module
-    cy.get('article').first().within(() => {
-      cy.contains(/Bekijk details|View details/).click();
-    });
+    cy.contains(/Bekijk details|View details/).first().click();
 
     cy.wait('@getModule', { timeout: 60000 });
 
