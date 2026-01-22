@@ -30,6 +30,18 @@ jobs:
 
   test-frontend:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        spec:
+          - live-home-local.cy.js
+          - live-login-local.cy.js
+          - live-login-validation-local.cy.js
+          - live-logout-local.cy.js
+          - live-module-detail-local.cy.js
+          - live-modules-local.cy.js
+          - live-modules-filters-local.cy.js
+          - live-register-local.cy.js
 
     steps:
       - name: Checkout code
@@ -47,11 +59,13 @@ jobs:
         with:
           working-directory: ./webapp
           install: npm ci
-          start: npx ng serve --configuration=acc
-          wait-on: 'http://localhost:4200'
+          build: npm run build -- --configuration=acc
+          start: npm run serve:ssr:webapp
+          wait-on: 'http://localhost:4000'
           wait-on-timeout: 180
+          spec: cypress/e2e/${{ matrix.spec }}
         env:
-          CYPRESS_BASE_URL: 'http://localhost:4200'
+          CYPRESS_BASE_URL: 'http://localhost:4000'
           CYPRESS_TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           CYPRESS_TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
