@@ -24,17 +24,11 @@ describe('Modules filters (lokale frontend, online backend)', () => {
     if (!testUser.email || !testUser.password) {
       this.skip();
     }
-    cy.intercept('POST', '**/api/auth/login').as('login');
     cy.intercept('GET', '**/api/keuzemodules/getAll').as('getAllModules');
     cy.intercept('GET', '**/api/keuzemodules/search*').as('searchModules');
 
-    cy.visit('/login');
-    cy.get('input[name="email"]').type(testUser.email);
-    cy.get('input[name="password"]').type(testUser.password, { log: false });
-    cy.get('button[type="submit"]').click();
-
-    cy.wait('@login', { timeout: 60000 });
-    cy.url({ timeout: 60000 }).should('include', '/modules');
+    cy.login(testUser.email, testUser.password);
+    cy.visit('/modules');
     cy.wait('@getAllModules', { timeout: 60000 });
 
     cy.get('#search').type('AI');

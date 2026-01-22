@@ -1,37 +1,33 @@
 /// <reference types="cypress" />
-// ***********************************************
-// This example commands.ts shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-//
-//
-// -- This is a parent command --
-// Cypress.Commands.add('login', (email, password) => { ... })
-//
-//
-// -- This is a child command --
-// Cypress.Commands.add('drag', { prevSubject: 'element'}, (subject, options) => { ... })
-//
-//
-// -- This is a dual command --
-// Cypress.Commands.add('dismiss', { prevSubject: 'optional'}, (subject, options) => { ... })
-//
-//
-// -- This will overwrite an existing command --
-// Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
-//
-// declare global {
-//   namespace Cypress {
-//     interface Chainable {
-//       login(email: string, password: string): Chainable<void>
-//       drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
-//       visit(originalFn: CommandOriginalFn, url: string, options: Partial<VisitOptions>): Chainable<Element>
-//     }
-//   }
-// }
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      login(email: string, password: string): Chainable<void>;
+    }
+  }
+}
+
+/**
+ * Login command with session caching to avoid repeated logins.
+ * Sessions are cached per email, so subsequent calls with the same
+ * email will restore the session instead of logging in again.
+ */
+Cypress.Commands.add('login', (email: string, password: string) => {
+  cy.session(
+    [email],
+    () => {
+      cy.visit('/login');
+      cy.get('input[name="email"]').should('be.visible').type(email);
+      cy.get('input[name="password"]').type(password, { log: false });
+      cy.get('button[type="submit"]').click();
+      cy.url({ timeout: 60000 }).should('include', '/modules');
+    },
+    {
+      validate: () => {
+        cy.visit('/modules');
+        cy.url({ timeout: 10000 }).should('include', '/modules');
+      },
+    }
+  );
+});
