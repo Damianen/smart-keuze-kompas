@@ -98,13 +98,10 @@ def recommend(student_text: str, limit: int = 5):
 			top_terms = []
 
 		
-		if top_terms and len(top_terms) >= 2:
-			shared_interests = ", ".join(top_terms[:3])
-			reason_text = f"Perfect match! Je interesses ({shared_interests}) passen goed bij deze module. Dit zijn precies de thema's die hier bij passen."
-		elif top_terms:
-			reason_text = f"Deze module focust op {top_terms[0]} — iets wat je interesse heeft."
+		if top_terms:
+			reason_text = f"Deze module focust op {top_terms[0]} - iets wat je intresse heeft."
 		else:
-			reason_text = "Deze module sluit goed aan op jouw profiel en interesses."
+			reason_text = ""
 
 		results.append({
 			"id": int(row.get("id", idx)),
