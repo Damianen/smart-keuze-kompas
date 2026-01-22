@@ -6,7 +6,16 @@ const testUser = {
 };
 
 describe('Modules (lokale frontend, online backend)', () => {
-  it('toont alle modules', () => {
+  before(() => {
+    if (!testUser.email || !testUser.password) {
+      cy.log('Skipping: TEST_USER_EMAIL and TEST_USER_PASSWORD must be set in cypress.env.json');
+    }
+  });
+
+  it('toont alle modules', function () {
+    if (!testUser.email || !testUser.password) {
+      this.skip();
+    }
     cy.intercept('POST', '**/api/auth/login').as('login');
     cy.intercept('GET', '**/api/keuzemodules/getAll').as('getAllModules');
 

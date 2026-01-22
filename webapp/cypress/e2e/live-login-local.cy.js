@@ -6,7 +6,17 @@ const testUser = {
 };
 
 describe('Login via lokale frontend + online backend', () => {
-  it('logt in en komt op modules', () => {
+  before(() => {
+    if (!testUser.email || !testUser.password) {
+      cy.log('Skipping: TEST_USER_EMAIL and TEST_USER_PASSWORD must be set in cypress.env.json');
+    }
+  });
+
+  it('logt in en komt op modules', function () {
+    if (!testUser.email || !testUser.password) {
+      this.skip();
+    }
+
     cy.visit(`${BASE_URL}/login`);
 
     cy.get('input[name="email"]').should('be.visible').type(testUser.email);

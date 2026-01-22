@@ -29,7 +29,9 @@ describe('Home Page - Live Backend', () => {
   it('should navigate to modules page when clicking view all modules button', () => {
     // Click view all modules button (NL: "Bekijk Alle Modules", EN: "View All Modules")
     cy.contains(/Bekijk Alle Modules|View All Modules/).click();
-    cy.url().should('include', '/modules');
+    // When not logged in, user is redirected to login with returnUrl pointing to modules
+    cy.url().should('include', '/login');
+    cy.url().should('include', 'returnUrl');
   });
 
   it('should navigate to login page when clicking login', () => {

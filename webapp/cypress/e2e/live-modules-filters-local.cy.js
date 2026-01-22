@@ -16,7 +16,16 @@ const selectFirstOptionIfAny = (selector) => {
 };
 
 describe('Modules filters (lokale frontend, online backend)', () => {
-  it('kan zoeken, niveau/locatie kiezen en filters wissen', () => {
+  before(() => {
+    if (!testUser.email || !testUser.password) {
+      cy.log('Skipping: TEST_USER_EMAIL and TEST_USER_PASSWORD must be set in cypress.env.json');
+    }
+  });
+
+  it('kan zoeken, niveau/locatie kiezen en filters wissen', function () {
+    if (!testUser.email || !testUser.password) {
+      this.skip();
+    }
     cy.intercept('POST', '**/api/auth/login').as('login');
     cy.intercept('GET', '**/api/keuzemodules/getAll').as('getAllModules');
     cy.intercept('GET', '**/api/keuzemodules/search*').as('searchModules');

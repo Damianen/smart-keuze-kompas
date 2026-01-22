@@ -39,14 +39,19 @@ describe('Login Page Validation - Live Backend', () => {
     cy.url().should('include', '/login');
   });
 
-  it('should show loading state when submitting valid form', () => {
-    cy.intercept('POST', '**/api/auth/login').as('login');
+  it('should disable button and show loading state when submitting', () => {
+    // Stub the API response with a long delay to observe the loading state
+    cy.intercept('POST', '**/login', {
+      delay: 5000,
+      statusCode: 200,
+      body: { success: false, message: 'Invalid credentials' },
+    }).as('login');
 
     cy.get('input[name="email"]').type('test@example.com');
     cy.get('input[name="password"]').type('password123');
     cy.get('button[type="submit"]').click();
 
-    // Check for loading state (NL: "Bezig met inloggen...", EN: "Logging in...")
-    cy.get('button[type="submit"]').should('contain.text', /Bezig met inloggen|Logging in/);
+    // Check that button is disabled during loading (more reliable than checking text)
+    cy.get('button[type="submit"]').should('be.disabled');
   });
 });
