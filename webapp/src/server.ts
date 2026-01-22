@@ -14,38 +14,47 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 // Security headers
+const isProd = process.env['NODE_ENV'] === 'production';
+
 app.use(
   helmet({
-    strictTransportSecurity: {
-      maxAge: 31536000,
-      includeSubDomains: true,
-    },
+    strictTransportSecurity: isProd
+      ? { maxAge: 31536000, includeSubDomains: true, preload: true }
+      : false, // don’t send HSTS in dev over http
+
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
+        baseUri: ["'self'"],
+        formAction: ["'self'"],
+
+        // If you can, try to remove 'unsafe-inline' later.
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", 'data:', 'https:'],
-        connectSrc: ["'self'", 'http://localhost:3000', 'https:'],
-        fontSrc: ["'self'", 'https:', 'data:'],
+
+        imgSrc: ["'self'", "data:", "https:"],
+        fontSrc: ["'self'", "https:", "data:"],
+
+        // Only allow your real API domain(s) in prod
+        connectSrc: isProd
+          ? ["'self'", "https://api.yourdomain.com"]
+          : ["'self'", "http://localhost:3000", "https:"],
+
         objectSrc: ["'none'"],
-        frameSrc: ["'none'"],
         frameAncestors: ["'none'"],
+        frameSrc: ["'none'"],
+
+        // Only if your whole site is HTTPS
+        upgradeInsecureRequests: isProd ? [] : null,
       },
     },
-    xFrameOptions: { action: 'deny' },
+
+    frameguard: { action: 'deny' }, // (helmet option name is frameguard)
     xContentTypeOptions: true,
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
   }),
 );
-app.use((req, res, next) => {
-  res.setHeader(
-    'Permissions-Policy',
-    'geolocation=(), microphone=(), camera=(), payment=(), usb=()',
-  );
-  next();
-});
-
+app.disable('x-powered-by');
 /**
  * Example Express Rest API endpoints can be defined here.
  * Uncomment and define endpoints as necessary.
@@ -64,8 +73,14 @@ app.use((req, res, next) => {
 app.use(
   express.static(browserDistFolder, {
     maxAge: '1y',
+    immutable: true,
     index: false,
     redirect: false,
+    setHeaders: (res, path) => {
+      if (path.endsWith('.html')) {
+        res.setHeader('Cache-Control', 'no-store');
+      }
+    },
   }),
 );
 
