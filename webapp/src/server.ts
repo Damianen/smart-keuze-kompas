@@ -5,12 +5,46 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
+import helmet from 'helmet';
 import { join } from 'node:path';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+// Security headers
+app.use(
+  helmet({
+    strictTransportSecurity: {
+      maxAge: 31536000,
+      includeSubDomains: true,
+    },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'", 'http://localhost:3000', 'https:'],
+        fontSrc: ["'self'", 'https:', 'data:'],
+        objectSrc: ["'none'"],
+        frameSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+      },
+    },
+    xFrameOptions: { action: 'deny' },
+    xContentTypeOptions: true,
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  }),
+);
+app.use((req, res, next) => {
+  res.setHeader(
+    'Permissions-Policy',
+    'geolocation=(), microphone=(), camera=(), payment=(), usb=()',
+  );
+  next();
+});
 
 /**
  * Example Express Rest API endpoints can be defined here.

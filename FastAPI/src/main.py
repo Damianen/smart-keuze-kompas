@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Security, HTTPException, status
+from fastapi import FastAPI, Security, HTTPException, status, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 from src.ai_model import recommend
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 import os
 from dotenv import load_dotenv
 
@@ -16,6 +18,22 @@ API_TOKEN = os.getenv("API_TOKEN")
 api_key_header = APIKeyHeader(name="Token", auto_error=False)
 
 app = FastAPI()
+
+
+# Security headers middleware
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        response: Response = await call_next(request)
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Content-Security-Policy"] = "default-src 'self'; frame-ancestors 'none'"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=(), payment=(), usb=()"
+        return response
+
+
+app.add_middleware(SecurityHeadersMiddleware)
 
 # CORS configuratie - allow all origins
 app.add_middleware(
