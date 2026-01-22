@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { KeuzeModule } from '../../../dtos/module.dto';
 import { KeuzemoduleService } from '../../../services/keuzemodule.service';
+import { ContentTranslationService } from '../../../services/content-translation.service';
 
 @Component({
   selector: 'app-modules-list',
@@ -15,16 +16,20 @@ export class ModulesListComponent implements OnInit {
   protected searchQuery = signal('');
   protected selectedLevel = signal('');
   protected selectedLocation = signal('');
-  protected isLoading = signal(true); // Initial page load
-  protected isSearching = signal(false); // Search/filter operations
+  protected isLoading = signal(true);
+  protected isSearching = signal(false);
+  protected isTranslating = signal(false);
   protected errorMessage = signal('');
 
   // Pagination
   protected currentPage = signal(1);
-  protected itemsPerPage = signal(9); // 9 modules per page (3x3 grid)
+  protected itemsPerPage = signal(9);
 
   protected readonly modules = signal<KeuzeModule[]>([]);
   protected readonly allModules = signal<KeuzeModule[]>([]);
+
+  // Translated modules for current page
+  protected readonly translatedPaginatedModules = signal<KeuzeModule[]>([]);
 
   protected readonly levels = computed(() => {
     const lvls = new Set(this.allModules().map(m => m.level));
@@ -36,11 +41,11 @@ export class ModulesListComponent implements OnInit {
     return Array.from(locs).sort();
   });
 
-  // Pagination computed properties
   protected readonly totalPages = computed(() => {
     return Math.ceil(this.modules().length / this.itemsPerPage());
   });
 
+  // Raw paginated modules (before translation)
   protected readonly paginatedModules = computed(() => {
     const start = (this.currentPage() - 1) * this.itemsPerPage();
     const end = start + this.itemsPerPage();
@@ -52,17 +57,14 @@ export class ModulesListComponent implements OnInit {
     const current = this.currentPage();
     const pages: number[] = [];
 
-    // Always show first page
     pages.push(1);
 
-    // Show pages around current page
     for (let i = Math.max(2, current - 1); i <= Math.min(total - 1, current + 1); i++) {
       if (!pages.includes(i)) {
         pages.push(i);
       }
     }
 
-    // Always show last page if there is more than one page
     if (total > 1 && !pages.includes(total)) {
       pages.push(total);
     }
@@ -70,7 +72,6 @@ export class ModulesListComponent implements OnInit {
     return pages.sort((a, b) => a - b);
   });
 
-  // Results display range
   protected readonly startIndex = computed(() => {
     return (this.currentPage() - 1) * this.itemsPerPage() + 1;
   });
@@ -81,7 +82,8 @@ export class ModulesListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private keuzemoduleService: KeuzemoduleService
+    private keuzemoduleService: KeuzemoduleService,
+    private contentTranslationService: ContentTranslationService
   ) {
     // Auto-search when filters change
     effect(() => {
@@ -89,22 +91,48 @@ export class ModulesListComponent implements OnInit {
       const level = this.selectedLevel();
       const location = this.selectedLocation();
 
-      // Only trigger search if we have filters applied and modules are loaded
       if (this.allModules().length > 0) {
         if (query || level || location) {
           this.performSearch();
         } else {
-          // No filters, show all modules
           this.modules.set(this.allModules());
         }
-        // Reset to page 1 when filters change
         this.currentPage.set(1);
+      }
+    });
+
+    // Translate only paginated modules when page changes
+    effect(() => {
+      const paginated = this.paginatedModules();
+      if (paginated.length > 0) {
+        this.translateCurrentPage(paginated);
+      } else {
+        this.translatedPaginatedModules.set([]);
       }
     });
   }
 
   ngOnInit(): void {
     this.loadAllModules();
+  }
+
+  private translateCurrentPage(modules: KeuzeModule[]): void {
+    if (!this.contentTranslationService.needsTranslation()) {
+      this.translatedPaginatedModules.set(modules);
+      return;
+    }
+
+    this.isTranslating.set(true);
+    this.contentTranslationService.translateModules(modules).subscribe({
+      next: (translated) => {
+        this.translatedPaginatedModules.set(translated);
+        this.isTranslating.set(false);
+      },
+      error: () => {
+        this.translatedPaginatedModules.set(modules);
+        this.isTranslating.set(false);
+      }
+    });
   }
 
   private loadAllModules(): void {
@@ -129,7 +157,6 @@ export class ModulesListComponent implements OnInit {
     const level = this.selectedLevel();
     const location = this.selectedLocation();
 
-    // If we have a search query, use the server-side search API
     if (query) {
       this.isSearching.set(true);
       this.errorMessage.set('');
@@ -145,7 +172,6 @@ export class ModulesListComponent implements OnInit {
         }
       });
     } else {
-      // No search query, do client-side filtering on all modules
       let filtered = this.allModules();
 
       if (level) {
@@ -171,11 +197,9 @@ export class ModulesListComponent implements OnInit {
     this.modules.set(this.allModules());
   }
 
-  // Pagination methods
   protected goToPage(page: number): void {
     if (page >= 1 && page <= this.totalPages()) {
       this.currentPage.set(page);
-      // Scroll to top of page
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }

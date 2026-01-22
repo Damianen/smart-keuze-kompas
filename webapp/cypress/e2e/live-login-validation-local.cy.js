@@ -1,8 +1,6 @@
-const BASE_URL = 'http://localhost:4200';
-
 describe('Login Page Validation - Live Backend', () => {
   beforeEach(() => {
-    cy.visit(`${BASE_URL}/login`);
+    cy.visit('/login');
   });
 
   it('should display the login form', () => {

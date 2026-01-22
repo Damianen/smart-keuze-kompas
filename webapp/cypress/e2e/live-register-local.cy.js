@@ -1,5 +1,3 @@
-const BASE_URL = 'http://localhost:4200';
-
 const testUser = {
   name: 'Cypress',
   surname: 'Test',
@@ -10,7 +8,7 @@ const testUser = {
 
 describe('Register Flow - Live Backend', () => {
   it('should show validation error for mismatched passwords', () => {
-    cy.visit(`${BASE_URL}/register`);
+    cy.visit('/register');
 
     cy.get('#name').type(testUser.name);
     cy.get('#surname').type(testUser.surname);
@@ -26,14 +24,14 @@ describe('Register Flow - Live Backend', () => {
   });
 
   it('should have a link to login page', () => {
-    cy.visit(`${BASE_URL}/register`);
+    cy.visit('/register');
     // Click login link (NL: "Log in", EN: "Log in")
     cy.contains('Log in').click();
     cy.url().should('include', '/login');
   });
 
   it('should show validation error for missing required fields', () => {
-    cy.visit(`${BASE_URL}/register`);
+    cy.visit('/register');
 
     // Only fill some fields
     cy.get('#name').type(testUser.name);
@@ -46,7 +44,7 @@ describe('Register Flow - Live Backend', () => {
   });
 
   it('should show validation error for short password', () => {
-    cy.visit(`${BASE_URL}/register`);
+    cy.visit('/register');
 
     cy.get('#name').type(testUser.name);
     cy.get('#surname').type(testUser.surname);

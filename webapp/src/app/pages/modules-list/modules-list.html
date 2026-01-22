@@ -122,8 +122,16 @@
 
       <!-- Modules Grid -->
       @if (!isSearching() && modules().length > 0) {
+        @if (isTranslating()) {
+          <div class="flex justify-center items-center py-4 mb-4">
+            <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-red-600 mr-2"></div>
+              {{ 'MODULES.TRANSLATING' | translate }}
+            </div>
+          </div>
+        }
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          @for (module of paginatedModules(); track module.id) {
+          @for (module of translatedPaginatedModules(); track module.id) {
             <article
               class="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-gray-100 dark:border-gray-700 hover:border-red-500 dark:hover:border-red-500 cursor-pointer transform hover:-translate-y-1 focus-within:ring-2 focus-within:ring-red-500"
               (click)="viewModule(module.id)"

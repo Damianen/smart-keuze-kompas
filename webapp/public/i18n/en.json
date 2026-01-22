@@ -107,7 +107,8 @@
     "CLEAR_ALL_FILTERS": "Clear all filters",
     "PREV_PAGE": "Previous page",
     "NEXT_PAGE": "Next page",
-    "PAGE": "Page"
+    "PAGE": "Page",
+    "TRANSLATING": "Translating content..."
   },
   "MODULE_DETAIL": {
     "BACK": "Back to overview",

@@ -1,5 +1,3 @@
-const BASE_URL = 'http://localhost:4200';
-
 const testUser = {
   email: Cypress.env('TEST_USER_EMAIL'),
   password: Cypress.env('TEST_USER_PASSWORD'),
@@ -20,7 +18,7 @@ describe('Logout Flow - Live Backend', () => {
     cy.intercept('POST', '**/api/auth/login').as('login');
     cy.intercept('POST', '**/api/auth/logout').as('logout');
 
-    cy.visit(`${BASE_URL}/login`);
+    cy.visit('/login');
 
     cy.get('#email').type(testUser.email);
     cy.get('#password').type(testUser.password);
@@ -50,7 +48,7 @@ describe('Logout Flow - Live Backend', () => {
     cy.wait('@logout', { timeout: 60000 });
     cy.wait(1000);
 
-    cy.visit(`${BASE_URL}/modules`);
+    cy.visit('/modules');
     cy.url({ timeout: 10000 }).should('include', '/login');
   });
 });

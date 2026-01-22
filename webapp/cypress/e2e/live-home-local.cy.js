@@ -1,8 +1,6 @@
-const BASE_URL = 'http://localhost:4200';
-
 describe('Home Page - Live Backend', () => {
   beforeEach(() => {
-    cy.visit(BASE_URL);
+    cy.visit('/');
   });
 
   it('should display the hero section with title', () => {

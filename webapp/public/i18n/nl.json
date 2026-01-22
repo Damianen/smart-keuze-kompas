@@ -107,7 +107,8 @@
     "CLEAR_ALL_FILTERS": "Wis alle filters",
     "PREV_PAGE": "Vorige pagina",
     "NEXT_PAGE": "Volgende pagina",
-    "PAGE": "Pagina"
+    "PAGE": "Pagina",
+    "TRANSLATING": "Inhoud vertalen..."
   },
   "MODULE_DETAIL": {
     "BACK": "Terug naar overzicht",

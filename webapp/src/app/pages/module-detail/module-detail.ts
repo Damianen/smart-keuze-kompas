@@ -4,6 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { KeuzeModule } from '../../../dtos/module.dto';
 import { KeuzemoduleService } from '../../../services/keuzemodule.service';
 import { RecommenderService } from '../../../services/recommender.service';
+import { ContentTranslationService } from '../../../services/content-translation.service';
+import { switchMap, of } from 'rxjs';
 
 @Component({
   selector: 'app-module-detail',
@@ -25,6 +27,7 @@ export class ModuleDetailComponent implements OnInit {
     private router: Router,
     private keuzemoduleService: KeuzemoduleService,
     private recommenderService: RecommenderService,
+    private contentTranslationService: ContentTranslationService,
   ) {}
 
   ngOnInit(): void {
@@ -38,7 +41,9 @@ export class ModuleDetailComponent implements OnInit {
     this.loading.set(true);
     this.errorMessage.set('');
 
-    this.keuzemoduleService.getKeuzeModuleById(id).subscribe({
+    this.keuzemoduleService.getKeuzeModuleById(id).pipe(
+      switchMap(module => module ? this.contentTranslationService.translateModule(module) : of(null))
+    ).subscribe({
       next: (module) => {
         if (module) {
           this.module.set(module);
