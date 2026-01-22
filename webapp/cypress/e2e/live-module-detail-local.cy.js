@@ -4,22 +4,16 @@ const testUser = {
 };
 
 describe('Module Detail Page - Live Backend', () => {
-  before(() => {
+  before(function () {
     if (!testUser.email || !testUser.password) {
       cy.log('Skipping: TEST_USER_EMAIL and TEST_USER_PASSWORD must be set in cypress.env.json');
-    }
-  });
-
-  beforeEach(function () {
-    if (!testUser.email || !testUser.password) {
       this.skip();
     }
 
     cy.intercept('POST', '**/api/auth/login').as('login');
     cy.intercept('GET', '**/api/keuzemodules/getAll').as('getAllModules');
-    cy.intercept('GET', '**/api/keuzemodules/*').as('getModule');
 
-    // Login first
+    // Login once for all tests
     cy.visit('/login');
     cy.get('input[name="email"]').type(testUser.email);
     cy.get('input[name="password"]').type(testUser.password, { log: false });
@@ -28,6 +22,18 @@ describe('Module Detail Page - Live Backend', () => {
     cy.wait('@login', { timeout: 60000 });
     cy.url({ timeout: 60000 }).should('include', '/modules');
     cy.wait('@getAllModules', { timeout: 60000 });
+  });
+
+  beforeEach(function () {
+    if (!testUser.email || !testUser.password) {
+      this.skip();
+    }
+
+    cy.intercept('GET', '**/api/keuzemodules/*').as('getModule');
+
+    // Navigate back to modules page for each test
+    cy.visit('/modules');
+    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
   });
 
   it('should navigate to module detail page when clicking a module', () => {
