@@ -51,4 +51,44 @@ describe('Module Detail Page - Live Backend', () => {
     // Check for module detail content (NL: "Over deze module", EN: "About this module")
     cy.contains(/Over deze module|About this module/).should('be.visible');
   });
+
+  it('should have a back button on detail page', () => {
+    // Click on the first module
+    cy.get('article').first().within(() => {
+      cy.contains(/Bekijk details|View details/).click();
+    });
+
+    cy.wait('@getModule', { timeout: 60000 });
+
+    // Check for back button (NL: "Terug naar overzicht", EN: "Back to overview")
+    cy.contains(/Terug naar overzicht|Back to overview/).should('be.visible');
+  });
+
+  it('should navigate back when clicking back button', () => {
+    // Click on the first module
+    cy.get('article').first().within(() => {
+      cy.contains(/Bekijk details|View details/).click();
+    });
+
+    cy.wait('@getModule', { timeout: 60000 });
+
+    // Click back button
+    cy.contains(/Terug naar overzicht|Back to overview/).click();
+
+    // Should be back on modules page
+    cy.url().should('include', '/modules');
+    cy.url().should('not.match', /\/modules\/\d+/);
+  });
+
+  it('should display learning goals section', () => {
+    // Click on the first module
+    cy.get('article').first().within(() => {
+      cy.contains(/Bekijk details|View details/).click();
+    });
+
+    cy.wait('@getModule', { timeout: 60000 });
+
+    // Check for learning goals section (NL: "Leerdoelen", EN: "Learning Goals")
+    cy.contains(/Leerdoelen|Learning Goals/).should('be.visible');
+  });
 });
