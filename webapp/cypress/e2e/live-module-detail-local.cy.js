@@ -29,14 +29,14 @@ describe('Module Detail Page - Live Backend', () => {
       this.skip();
     }
 
-    cy.intercept('GET', '**/api/keuzemodules/*').as('getModule');
-
-    // Navigate back to modules page for each test
-    cy.visit('/modules');
-    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+    // Use regex to match only numeric IDs, not 'getAll'
+    cy.intercept('GET', /\/api\/keuzemodules\/\d+$/).as('getModule');
   });
 
   it('should navigate to module detail page when clicking a module', () => {
+    // Should already be on modules page from before() hook
+    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+
     // Click on the first module's view details button (NL: "Bekijk details", EN: "View details")
     cy.get('article').first().within(() => {
       cy.contains(/Bekijk details|View details/).click();
@@ -44,9 +44,16 @@ describe('Module Detail Page - Live Backend', () => {
 
     // Should be on a module detail page
     cy.url().should('match', /\/modules\/\d+/);
+
+    // Go back for next test
+    cy.go('back');
+    cy.url().should('include', '/modules');
+    cy.url().should('not.match', /\/modules\/\d+/);
   });
 
   it('should display module information on detail page', () => {
+    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+
     // Click on the first module
     cy.get('article').first().within(() => {
       cy.contains(/Bekijk details|View details/).click();
@@ -56,9 +63,16 @@ describe('Module Detail Page - Live Backend', () => {
 
     // Check for module detail content (NL: "Over deze module", EN: "About this module")
     cy.contains(/Over deze module|About this module/).should('be.visible');
+
+    // Go back for next test
+    cy.go('back');
+    cy.url().should('include', '/modules');
+    cy.url().should('not.match', /\/modules\/\d+/);
   });
 
   it('should have a back button on detail page', () => {
+    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+
     // Click on the first module
     cy.get('article').first().within(() => {
       cy.contains(/Bekijk details|View details/).click();
@@ -68,9 +82,16 @@ describe('Module Detail Page - Live Backend', () => {
 
     // Check for back button (NL: "Terug naar overzicht", EN: "Back to overview")
     cy.contains(/Terug naar overzicht|Back to overview/).should('be.visible');
+
+    // Go back for next test
+    cy.go('back');
+    cy.url().should('include', '/modules');
+    cy.url().should('not.match', /\/modules\/\d+/);
   });
 
   it('should navigate back when clicking back button', () => {
+    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+
     // Click on the first module
     cy.get('article').first().within(() => {
       cy.contains(/Bekijk details|View details/).click();
@@ -87,6 +108,8 @@ describe('Module Detail Page - Live Backend', () => {
   });
 
   it('should display learning goals section', () => {
+    cy.get('article', { timeout: 60000 }).should('have.length.at.least', 1);
+
     // Click on the first module
     cy.get('article').first().within(() => {
       cy.contains(/Bekijk details|View details/).click();
