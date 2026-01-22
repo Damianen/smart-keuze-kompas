@@ -30,8 +30,6 @@ jobs:
 
   test-frontend:
     runs-on: ubuntu-latest
-    env:
-      NODE_OPTIONS: '--max-old-space-size=4096'
 
     steps:
       - name: Checkout code
@@ -49,14 +47,11 @@ jobs:
         with:
           working-directory: ./webapp
           install: npm ci
-          build: npm run build -- --configuration=acc
-          start: npm run serve:ssr:webapp
-          wait-on: 'http://localhost:4000'
+          start: npx ng serve --configuration=acc
+          wait-on: 'http://localhost:4200'
           wait-on-timeout: 180
-          browser: chrome
-          config: video=false,screenshotOnRunFailure=false
         env:
-          CYPRESS_BASE_URL: 'http://localhost:4000'
+          CYPRESS_BASE_URL: 'http://localhost:4200'
           CYPRESS_TEST_USER_EMAIL: ${{ secrets.TEST_USER_EMAIL }}
           CYPRESS_TEST_USER_PASSWORD: ${{ secrets.TEST_USER_PASSWORD }}
 
