@@ -160,7 +160,8 @@
     "NO_RESULTS_TITLE": "No recommendations found",
     "NO_RESULTS_DESC": "Try adjusting your input or adding more details",
     "SELECT": "Select",
-    "DESELECT": "Deselect"
+    "DESELECT": "Deselect",
+    "DISCLAMER": "The recommendations the AI Gives you are recommendations bases on the text not definitive truth"
   },
   "PROFILE": {
     "TITLE": "My Profile",

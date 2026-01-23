@@ -160,7 +160,8 @@
     "NO_RESULTS_TITLE": "Geen aanbevelingen gevonden",
     "NO_RESULTS_DESC": "Probeer je invoer aan te passen of meer details toe te voegen",
     "SELECT": "Selecteer",
-    "DESELECT": "Deselecteer"
+    "DESELECT": "Deselecteer",
+    "DISCLAMER": "De aanbevelingen die de AI geeft zijn aanbevelingen en geen harde waarheid."
   },
   "PROFILE": {
     "TITLE": "Mijn Profiel",
