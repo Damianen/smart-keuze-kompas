@@ -28,13 +28,31 @@ def _load_artifacts():
 		_modules_df = pd.read_csv(DATA_CSV)
 
 
+# Nederlandse stopwoorden - moet synchroon zijn met train_model.py
+NL_STOPWORDS = [
+    'ik', 'je', 'wil', 'willen', 'wilt', 'zou', 'kunnen', 'kan', 'moet', 'moeten',
+    'leren', 'leer', 'leert', 'studeren', 'studeer', 'studeert',
+    'over', 'aan', 'bij', 'met', 'voor', 'naar', 'op', 'in', 'de', 'het', 'een',
+    'ben', 'bent', 'is', 'zijn', 'was', 'waren', 'geweest',
+    'hebben', 'heeft', 'had', 'hadden', 'gehad',
+    'graag', 'meer', 'ook', 'wel', 'niet', 'maar', 'of', 'en', 'dat', 'die', 'dit',
+    'worden', 'wordt', 'word', 'geworden',
+    'mijn', 'me', 'mezelf', 'mijzelf',
+    'deze', 'dit', 'die', 'dat',
+    'wat', 'wanneer', 'waar', 'waarom', 'hoe', 'wie',
+    'interesse', 'geïnteresseerd', 'weten', 'kennis', 'te', 'begrijpen'
+]
+
 def _basic_clean(text: str) -> str:
-	"""Simpel schoonmaken: lower, verwijder digits/punctuatie/extra spaties."""
+	"""Simpel schoonmaken: lower, verwijder digits/punctuatie/extra spaties en filter stopwoorden."""
 	t = (text or "").lower()
 	t = re.sub(r"\d+", " ", t)
 	t = re.sub(r"[^\w\s]", " ", t)
 	t = re.sub(r"\s+", " ", t).strip()
-	return t
+	# Filter stopwoorden eruit
+	words = t.split()
+	words = [w for w in words if w not in NL_STOPWORDS]
+	return " ".join(words)
 
 
 def _normalize(arr: np.ndarray) -> np.ndarray:
@@ -99,9 +117,9 @@ def recommend(student_text: str, limit: int = 5):
 
 		
 		if top_terms:
-			reason_text = f"Deze module focust op {top_terms[0]} - iets wat je intresse heeft."
+			reason_text = f"Deze module focust op {top_terms[0]} - iets wat je interesse heeft."
 		else:
-			reason_text = ""
+			reason_text = "Deze module past bij je profiel."
 
 		results.append({
 			"id": int(row.get("id", idx)),
