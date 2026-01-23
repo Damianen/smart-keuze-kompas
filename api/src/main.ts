@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
+import { HttpExceptionFilter } from './infrastructuur/http/filter/json-exeption-filter';
 
 async function bootstrap() {
 	const app = await NestFactory.create(AppModule);
@@ -14,6 +15,7 @@ async function bootstrap() {
 	app.use(cookieParser());
 
 	// Security headers
+	
 	app.use(
 		helmet({
 			strictTransportSecurity: {
@@ -61,10 +63,11 @@ async function bootstrap() {
 					)[0];
 					errorObject[err.property] = firstmessage;
 				});
-				return new BadRequestException(errorObject);
+				return new BadRequestException("Er is iets fouts gegaan bij het valideren van de ingevoerde gegevens", errorObject);
 			},
 		}),
 	);
+	app.useGlobalFilters(new HttpExceptionFilter());
 	await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
