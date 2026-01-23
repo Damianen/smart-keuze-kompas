@@ -1,7 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
     catch(exception: HttpException, host: ArgumentsHost) {
@@ -20,11 +19,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
                 timestamp: new Date().toISOString(),
             });
         }
-
         return response.status(exception.getStatus()).json({
             statusCode: exception.getStatus(),
-            message: "BAD REQUEST",
+            message: status,
             timestamp: new Date().toISOString(),
         });
-  }
+    }
 }

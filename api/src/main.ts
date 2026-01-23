@@ -63,7 +63,7 @@ async function bootstrap() {
 					)[0];
 					errorObject[err.property] = firstmessage;
 				});
-				return new BadRequestException("Er is iets fouts gegaan bij het valideren van de ingevoerde gegevens", errorObject);
+				return new BadRequestException(errorObject);
 			},
 		}),
 	);
