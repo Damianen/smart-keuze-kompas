@@ -30,6 +30,7 @@ app.use(
 
         // If you can, try to remove 'unsafe-inline' later.
         scriptSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrcAttr: null,
         styleSrc: ["'self'", "'unsafe-inline'"],
 
         imgSrc: ["'self'", "data:", "https:"],
@@ -37,7 +38,7 @@ app.use(
 
         // Only allow your real API domain(s) in prod
         connectSrc: isProd
-          ? ["'self'", "https://api.yourdomain.com"]
+          ? ["'self'", "https://smart-keuze-kompas.onrender.com"]
           : ["'self'", "http://localhost:3000", "https:"],
 
         objectSrc: ["'none'"],
