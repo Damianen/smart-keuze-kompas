@@ -117,7 +117,14 @@ def recommend(student_text: str, limit: int = 5):
 
 		
 		if top_terms:
-			reason_text = f"Deze module focust op {top_terms[0]} - iets wat je interesse heeft."
+			# Gebruik meerdere termen in de reden
+			if len(top_terms) == 1:
+				reason_text = f"Deze module focust op {top_terms[0]} - iets wat je interesse heeft."
+			elif len(top_terms) == 2:
+				reason_text = f"Deze module focust op {top_terms[0]} en {top_terms[1]} - onderwerpen die je interesse hebben."
+			else:
+				terms_str = ", ".join(top_terms[:-1]) + f" en {top_terms[-1]}"
+				reason_text = f"Deze module behandelt {terms_str} - onderwerpen die bij je interesses passen."
 		else:
 			reason_text = "Deze module past bij je profiel."
 
