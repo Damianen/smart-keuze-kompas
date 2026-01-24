@@ -183,7 +183,8 @@
     "EMPTY_TITLE": "Nog geen opgeslagen modules",
     "EMPTY_DESC": "Begin met het opslaan van modules die je interessant vindt",
     "DISCOVER_MODULES": "Ontdek Modules",
-    "MODULES": "Modules"
+    "MODULES": "Modules",
+    "MODULE": "Module"
   },
   "SAVED_RECOMMENDATIONS": {
     "TITLE": "Opgeslagen Aanbevelingen",

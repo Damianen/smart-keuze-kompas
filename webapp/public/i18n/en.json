@@ -183,7 +183,8 @@
     "EMPTY_TITLE": "No saved modules yet",
     "EMPTY_DESC": "Start saving modules that you find interesting",
     "DISCOVER_MODULES": "Discover Modules",
-    "MODULES": "Modules"
+    "MODULES": "Modules",
+    "MODULE": "Module"
   },
   "SAVED_RECOMMENDATIONS": {
     "TITLE": "Saved Recommendations",
