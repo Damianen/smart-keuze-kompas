@@ -30,7 +30,7 @@ def _load_artifacts():
 
 # Nederlandse stopwoorden - moet synchroon zijn met train_model.py
 NL_STOPWORDS = [
-    'ik', 'je', 'wil', 'willen', 'wilt', 'zou', 'kunnen', 'kan', 'moet', 'moeten',
+    'ik', 'je', 'jij', 'jou', 'wil', 'willen', 'wilt', 'zou', 'kunnen', 'kan', 'moet', 'moeten',
     'leren', 'leer', 'leert', 'studeren', 'studeer', 'studeert',
     'over', 'aan', 'bij', 'met', 'voor', 'naar', 'op', 'in', 'de', 'het', 'een',
     'ben', 'bent', 'is', 'zijn', 'was', 'waren', 'geweest',
@@ -40,7 +40,24 @@ NL_STOPWORDS = [
     'mijn', 'me', 'mezelf', 'mijzelf',
     'deze', 'dit', 'die', 'dat',
     'wat', 'wanneer', 'waar', 'waarom', 'hoe', 'wie',
-    'interesse', 'geïnteresseerd', 'weten', 'kennis', 'te', 'begrijpen'
+    'interesse', 'geïnteresseerd', 'weten', 'kennis', 'te', 'begrijpen',
+    'werken', 'werk', 'werkt', 'gewerkt',
+    'doen', 'doe', 'doet', 'gedaan',
+    'maken', 'maak', 'maakt', 'gemaakt',
+    'gaan', 'ga', 'gaat', 'gegaan',
+    'komen', 'kom', 'komt', 'gekomen',
+    'zien', 'zie', 'ziet', 'gezien',
+    'geven', 'geef', 'geeft', 'gegeven',
+    'vinden', 'vind', 'vindt', 'gevonden',
+    'denken', 'denk', 'denkt', 'gedacht',
+    'zeggen', 'zeg', 'zegt', 'gezegd',
+    'veel', 'hele', 'erg', 'heel', 'zo', 'dus', 'dan', 'als', 'omdat', 'want',
+    'enzo', 'enzovoort', 'etcetera', 'etc',
+    'iets', 'iemand', 'ergens', 'altijd', 'nooit', 'soms', 'vaak', 'misschien',
+    'ja', 'nee', 'nou', 'hoor', 'toch', 'gewoon', 'even', 'nog', 'al', 'hier', 'daar',
+    'nu', 'straks', 'later', 'vandaag', 'morgen', 'gisteren',
+    'worden', 'werd', 'werden',
+    'door', 'zonder', 'vanaf', 'tot', 'om', 'rond', 'tussen', 'tijdens'
 ]
 
 def _basic_clean(text: str) -> str:
@@ -117,7 +134,14 @@ def recommend(student_text: str, limit: int = 5):
 
 		
 		if top_terms:
-			reason_text = f"Deze module focust op {top_terms[0]} - iets wat je interesse heeft."
+			# Gebruik alle termen uit top_terms
+			if len(top_terms) == 1:
+				terms_str = top_terms[0]
+			elif len(top_terms) == 2:
+				terms_str = f"{top_terms[0]} en {top_terms[1]}"
+			else:
+				terms_str = ", ".join(top_terms[:-1]) + f" en {top_terms[-1]}"
+			reason_text = f"Deze module behandelt {terms_str} - onderwerpen die bij je interesses passen."
 		else:
 			reason_text = "Deze module past bij je profiel."
 
