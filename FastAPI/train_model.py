@@ -7,7 +7,7 @@ df = pd.read_csv('modeltraining.py/cleaned_modules.csv')
 
 # Nederlandse stopwoorden
 NL_STOPWORDS = [
-    'ik', 'je', 'wil', 'willen', 'wilt', 'zou', 'kunnen', 'kan', 'moet', 'moeten',
+    'ik', 'je', 'jij', 'jou', 'wil', 'willen', 'wilt', 'zou', 'kunnen', 'kan', 'moet', 'moeten',
     'leren', 'leer', 'leert', 'studeren', 'studeer', 'studeert',
     'over', 'aan', 'bij', 'met', 'voor', 'naar', 'op', 'in', 'de', 'het', 'een',
     'ben', 'bent', 'is', 'zijn', 'was', 'waren', 'geweest',
@@ -17,7 +17,24 @@ NL_STOPWORDS = [
     'mijn', 'me', 'mezelf', 'mijzelf',
     'deze', 'dit', 'die', 'dat',
     'wat', 'wanneer', 'waar', 'waarom', 'hoe', 'wie',
-    'interesse', 'geïnteresseerd', 'weten', 'kennis', 'te', 'begrijpen'
+    'interesse', 'geïnteresseerd', 'weten', 'kennis', 'te', 'begrijpen',
+    'werken', 'werk', 'werkt', 'gewerkt',
+    'doen', 'doe', 'doet', 'gedaan',
+    'maken', 'maak', 'maakt', 'gemaakt',
+    'gaan', 'ga', 'gaat', 'gegaan',
+    'komen', 'kom', 'komt', 'gekomen',
+    'zien', 'zie', 'ziet', 'gezien',
+    'geven', 'geef', 'geeft', 'gegeven',
+    'vinden', 'vind', 'vindt', 'gevonden',
+    'denken', 'denk', 'denkt', 'gedacht',
+    'zeggen', 'zeg', 'zegt', 'gezegd',
+    'veel', 'hele', 'erg', 'heel', 'zo', 'dus', 'dan', 'als', 'omdat', 'want',
+    'enzo', 'enzovoort', 'etcetera', 'etc',
+    'iets', 'iemand', 'ergens', 'altijd', 'nooit', 'soms', 'vaak', 'misschien',
+    'ja', 'nee', 'nou', 'hoor', 'toch', 'gewoon', 'even', 'nog', 'al', 'hier', 'daar',
+    'nu', 'straks', 'later', 'vandaag', 'morgen', 'gisteren',
+    'worden', 'werd', 'werden',
+    'door', 'zonder', 'vanaf', 'tot', 'om', 'rond', 'tussen', 'tijdens'
 ]
 
 # Train TF-IDF met stopwoorden
